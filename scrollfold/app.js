@@ -9,11 +9,7 @@ const LINE = "#ff4040";
 const ZOOMS = ["fit", 10, 25, 50, 100, 200];
 const MAX_VIEW = 16000; // canvas side cap for previews
 
-// This page starts with the source ratio (no cropping, nothing to decide) and lists it first.
-// split.js keeps the full app's default; it is not changed here.
-const DEFAULT_RATIO = "original";
-const RATIO_ORDER = ["original", ...Object.keys(S.RATIOS).filter((k) => k !== "original")];
-const state = { file: null, bmp: null, name: "", ratioKey: DEFAULT_RATIO, fit: S.DEFAULT_FIT, busy: false, cancel: false };
+const state = { file: null, bmp: null, name: "", ratioKey: S.DEFAULT_RATIO, fit: S.DEFAULT_FIT, busy: false, cancel: false };
 
 // ------------------------------------------------------------------ text
 function applyLang() {
@@ -25,7 +21,7 @@ function applyLang() {
 }
 
 function buildRatio() {
-  $("ratio").replaceChildren(...RATIO_ORDER.map((k) => {
+  $("ratio").replaceChildren(...Object.keys(S.RATIOS).map((k) => {
     const label = document.createElement("label");
     const input = Object.assign(document.createElement("input"), { type: "radio", name: "ratio", value: k, checked: k === state.ratioKey });
     input.addEventListener("change", () => { state.ratioKey = k; autoCount(); });

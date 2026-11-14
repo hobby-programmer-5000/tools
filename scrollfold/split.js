@@ -9,8 +9,8 @@ export const X_MAX_BYTES = 5 * 1024 * 1024;
 export const JPEG_QUALITIES = [0.92, 0.88, 0.84, 0.8, 0.75, 0.7, 0.65, 0.6, 0.5, 0.4];
 
 // Same list as core.RATIOS (measured from X posts, see reference.md).
-export const RATIOS = { "1:2": [1, 2], "9:16": [9, 16], "3:4": [3, 4], "1:1": [1, 1], "1:12": [1, 12], original: null };
-export const DEFAULT_RATIO = "1:2";
+export const RATIOS = { original: null, "1:2": [1, 2], "9:16": [9, 16], "3:4": [3, 4], "1:1": [1, 1], "1:12": [1, 12] };
+export const DEFAULT_RATIO = "original";
 export const LARGE_WARN_PIXELS = 100_000_000;
 export const MAX_PIXELS = 400_000_000;
 export const FIT_MODES = ["crop", "blur", "black", "white"];
