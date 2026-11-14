@@ -22,6 +22,13 @@ main h2 { font-size: 20px; margin: 0 0 var(--s2); letter-spacing: -0.01em; }
 .drop-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); padding: var(--s3) var(--s4); }
 .drop-foot p { margin: 0; }
 
+/* Large-image caution, right under the drop zone so it is read before picking a file. */
+.caution { margin-top: var(--s5); padding: var(--s4) var(--s4) var(--s3); background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--yellow); border-radius: var(--radius); }
+.caution h2 { font-size: 16px; margin: 0 0 var(--s2); }
+.caution h2 span[aria-hidden] { color: var(--yellow); }
+.caution ul { margin: 0 0 var(--s2); padding-left: 1.2em; display: grid; gap: var(--s1); font-size: 14px; }
+.caution p { margin: 0; }
+
 /* Settings */
 .settings { display: grid; gap: var(--s5); margin-top: var(--s6); }
 .field { margin: 0; padding: 0; border: 0; min-width: 0; }
