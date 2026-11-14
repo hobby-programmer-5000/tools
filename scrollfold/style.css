@@ -1,5 +1,3 @@
-.kicker { display: inline-flex; align-items: center; gap: 6px; }
-.kicker .ic { width: 14px; height: 14px; }
 main h2 { font-size: 20px; margin: 0 0 var(--s2); letter-spacing: -0.01em; }
 
 /* Drop zone: the main card, same weight as x-counter's editor. */

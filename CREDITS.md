@@ -33,7 +33,6 @@ Copied into `assets/icons.svg`.
 |---|---|---|
 | languages, copy, eraser, shield-check | [Lucide](https://lucide.dev) 1.72.0 | ISC |
 | sun, moon, monitor, arrow-right | Lucide, derived from [Feather](https://github.com/feathericons/feather) | MIT |
-| X mark | [Simple Icons](https://simpleicons.org) 16.37.0 | CC0-1.0 for the SVG data. The mark is a trademark of X Corp., used unaltered, in one color, only to say which service the tool is for. |
 
 The full Lucide (ISC) and Feather (MIT) license texts are in the landing page repository's
 [CREDITS.md](https://github.com/hobby-programmer-5000/hobby-programmer-5000.github.io/blob/main/CREDITS.md#lucide-license-isc).

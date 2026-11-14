@@ -1,5 +1,3 @@
-.kicker { display: inline-flex; align-items: center; gap: 6px; }
-.kicker .ic { width: 14px; height: 14px; }
 
 /* Limit switch: two radio buttons styled as a segmented control. */
 .limits { display: inline-flex; gap: 0; margin: 0 0 var(--s4); padding: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
