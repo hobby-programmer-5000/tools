@@ -1,0 +1,71 @@
+.kicker { display: inline-flex; align-items: center; gap: 6px; }
+.kicker .ic { width: 14px; height: 14px; }
+
+/* Limit switch: two radio buttons styled as a segmented control. */
+.limits { display: inline-flex; gap: 0; margin: 0 0 var(--s4); padding: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.limits label { position: relative; }
+.limits input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.limits span { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 var(--s4); border-radius: 8px; font-size: 14px; color: var(--muted); }
+.limits b { font-weight: 650; color: inherit; }
+.limits input:checked + span { background: var(--accent); color: var(--accent-ink); }
+.limits input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.editor { background: var(--surface); border: 2px solid var(--text); border-radius: 14px; box-shadow: 6px 6px 0 var(--shadow); overflow: hidden; }
+/* What the user types is shown only in system fonts. The web fonts are split by
+   Unicode range, so showing typed text in them would fetch new font files from the
+   CDN as new characters appear, which hints at what is being typed. */
+.editor textarea, .cut-preview {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Noto Sans CJK KR", sans-serif;
+}
+.editor textarea {
+  display: block; width: 100%; min-height: 200px; resize: vertical;
+  padding: var(--s4); border: 0; outline: 0; background: transparent; color: var(--text);
+  font-size: 17px; line-height: 1.65;
+}
+.editor textarea::placeholder { color: var(--muted); opacity: .8; }
+.editor:focus-within { border-color: var(--accent); outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.status { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--s1) var(--s4); padding: var(--s3) var(--s4) var(--s2); border-top: 1px solid var(--border); }
+.status p { margin: 0; }
+.count { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.count .of { font-size: 16px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.remain { font-weight: 650; color: var(--ok); }
+.remain.warn { color: var(--yellow); }
+.remain.over { color: var(--pink); }
+.remain.idle { color: var(--muted); font-weight: 500; }
+
+.bar { height: 8px; margin: 0 var(--s4) var(--s4); border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: inherit; transition: width .15s ease; }
+.bar.warn i { background: var(--yellow); }
+.bar.over i { background: var(--pink); }
+
+.invalid { margin: 0; padding: 0 var(--s4) var(--s4); color: var(--pink); font-weight: 600; font-size: 14px; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); margin-top: var(--s5); }
+.hint { margin-left: var(--s1); }
+@media (hover: none) and (pointer: coarse) { .hint { display: none; } }
+.private { display: flex; align-items: flex-start; gap: var(--s2); margin: var(--s4) 0 0; }
+.private .ic { width: 16px; height: 16px; margin-top: 2px; color: var(--ok); }
+
+main h2 { font-size: 20px; margin: 0 0 var(--s2); letter-spacing: -0.01em; }
+.cut, .parts, .rules { margin-top: var(--s7); }
+
+.cut-preview {
+  margin-top: var(--s3); padding: var(--s4); max-height: 320px; overflow: auto;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 15px; line-height: 1.7;
+}
+.cut-preview mark { background: color-mix(in srgb, var(--pink) 28%, transparent); color: var(--text); border-bottom: 2px solid var(--pink); padding: 1px 0; }
+.cut-preview .scissors { font-family: var(--pixel); font-size: 12px; color: var(--pink); margin: 0 2px; }
+
+.tiles { display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); margin-top: var(--s3); }
+.tile { padding: var(--s4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.tile p { margin: 0; }
+.tile-k { font-size: 13px; color: var(--muted); font-weight: 600; }
+.tile-v { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 2px 0 4px !important; }
+.tile-v small { font-size: 14px; font-weight: 600; color: var(--muted); }
+.tile-h { font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+.rules ol { margin: var(--s3) 0; padding-left: 1.3em; display: grid; gap: var(--s2); color: var(--text); }
+.rules li { padding-left: 4px; }

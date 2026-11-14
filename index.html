@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tools · hp5000 tools</title>
+  <meta name="description" content="Small web tools by HobbyProgrammer5000 that run right in your browser.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="hp5000 tools">
+  <meta property="og:description" content="Small web tools that run right in your browser.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/350819703?v=4&s=460">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/350819703?v=4&s=64">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="assets/site.css">
+  <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script src="assets/i18n.js" defer></script>
+  <script src="assets/site.js" defer></script>
+  <script src="assets/catalog.js" defer></script>
+</head>
+<body>
+  <span hidden data-i18n-title="catalog.title"></span>
+  <a class="skip" href="#main" data-i18n="site.skip">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="mark" href="https://hobby-programmer-5000.github.io/" data-i18n-label="site.home" aria-label="Home">hp<span>5000</span></a>
+      <a class="crumb" href="./">/tools</a>
+      <div class="controls">
+        <button class="icon-btn" id="lang" type="button"><svg class="ic" aria-hidden="true"><use href="assets/icons.svg#i-languages"/></svg><span id="lang-label">KO</span></button>
+        <button class="icon-btn" id="theme" type="button"><svg class="ic" aria-hidden="true"><use id="theme-icon" href="assets/icons.svg#i-monitor"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <div class="page-head">
+      <p class="kicker">./tools --list</p>
+      <h1 data-i18n="catalog.title">Tools</h1>
+      <p data-i18n="catalog.lead">Small web tools that run right in your browser.</p>
+    </div>
+    <div id="list" class="grid" aria-live="polite"></div>
+    <noscript><p><a href="x-counter/">X post length counter</a></p></noscript>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="small muted" data-i18n="site.private">Everything runs in your browser. Nothing you type is sent anywhere.</p>
+      <p class="small">
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/CREDITS.md" data-i18n="site.credits">Credits</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools" data-i18n="site.source">Source</a>
+      </p>
+    </div>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

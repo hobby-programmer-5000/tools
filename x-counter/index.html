@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X post length counter · hp5000 tools</title>
+  <meta name="description" content="Counts a post the way X does: Korean, Chinese and Japanese characters count as 2, links as 23, emoji as 2. Shows where a long post gets cut. Runs in your browser.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="X post length counter">
+  <meta property="og:description" content="Counts a post the way X does, and shows where a long post gets cut.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/350819703?v=4&s=460">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/350819703?v=4&s=64">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script src="../vendor/twitter-text-3.1.0.bundle.js" defer></script>
+  <script src="../assets/i18n.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script src="counter.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <span hidden data-i18n-title="xc.title"></span>
+  <a class="skip" href="#text" data-i18n="site.skip">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="mark" href="https://hobby-programmer-5000.github.io/" data-i18n-label="site.home" aria-label="Home">hp<span>5000</span></a>
+      <a class="crumb" href="../">/tools</a>
+      <div class="controls">
+        <button class="icon-btn" id="lang" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-languages"/></svg><span id="lang-label">KO</span></button>
+        <button class="icon-btn" id="theme" type="button"><svg class="ic" aria-hidden="true"><use id="theme-icon" href="../assets/icons.svg#i-monitor"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <p class="kicker"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-x"/></svg> ./x-counter</p>
+      <h1 data-i18n="xc.title">X post length counter</h1>
+      <p data-i18n="xc.lead">Counts your post the way X does.</p>
+    </div>
+
+    <fieldset class="limits">
+      <legend class="sr-only" data-i18n="xc.limitLabel">Post limit</legend>
+      <label><input type="radio" name="limit" value="280" checked><span><b data-i18n="xc.standard">Standard</b> 280</span></label>
+      <label><input type="radio" name="limit" value="25000"><span><b data-i18n="xc.premium">Premium</b> 25,000</span></label>
+    </fieldset>
+
+    <section class="editor" aria-labelledby="text-label">
+      <label id="text-label" for="text" class="sr-only" data-i18n="xc.inputLabel">Your post</label>
+      <textarea id="text" rows="8" spellcheck="true" autocomplete="off" data-i18n-placeholder="xc.placeholder" placeholder="Paste or type your post here…"></textarea>
+      <div class="status">
+        <p class="count"><span id="count">0</span><span class="of"> / <span id="limit">280</span></span></p>
+        <p id="remain" class="remain"></p>
+      </div>
+      <div class="bar" id="bar" role="progressbar" aria-labelledby="text-label" aria-valuemin="0" aria-valuemax="280" aria-valuenow="0"><i></i></div>
+      <p id="invalid" class="invalid" role="status" hidden></p>
+    </section>
+
+    <div class="actions">
+      <button class="btn primary" id="copy" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-copy"/></svg><span data-i18n="xc.copy">Copy</span></button>
+      <button class="btn quiet" id="clear" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-eraser"/></svg><span data-i18n="xc.clear">Clear</span></button>
+      <span class="hint muted small"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> <span class="sr-only" data-i18n="xc.shortcut">Ctrl+Enter copies</span></span>
+    </div>
+    <!-- Right after Clear, so its Undo button is the next Tab stop. -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <p class="private small muted"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield"/></svg><span><span data-i18n="site.private">Everything runs in your browser.</span> <span data-i18n="xc.draftNote">Your draft is kept in this browser only.</span></span></p>
+
+    <section id="cut" class="cut" aria-labelledby="cut-h" hidden>
+      <h2 id="cut-h" data-i18n="xc.cutTitle">This part gets cut off</h2>
+      <p class="muted small" data-i18n="xc.cutLead">Everything highlighted would not fit in one post.</p>
+      <div id="cut-preview" class="cut-preview"></div>
+    </section>
+
+    <section class="parts" aria-labelledby="parts-h">
+      <h2 id="parts-h" data-i18n="xc.breakdown">Why this number</h2>
+      <div class="tiles">
+        <div class="tile"><p class="tile-k" data-i18n="xc.single">Counted as 1</p><p class="tile-v"><span id="p-single">0</span></p><p class="tile-h" data-i18n="xc.singleHint"></p></div>
+        <div class="tile wide"><p class="tile-k" data-i18n="xc.double">Counted as 2</p><p class="tile-v"><span id="p-double">0</span></p><p class="tile-h" data-i18n="xc.doubleHint"></p></div>
+        <div class="tile"><p class="tile-k" data-i18n="xc.links">Links</p><p class="tile-v"><span id="p-links">0</span></p><p class="tile-h" data-i18n="xc.linksHint"></p></div>
+        <div class="tile"><p class="tile-k" data-i18n="xc.emoji">Emoji</p><p class="tile-v"><span id="p-emoji">0</span></p><p class="tile-h" data-i18n="xc.emojiHint"></p></div>
+      </div>
+    </section>
+
+    <section class="rules" aria-labelledby="rules-h">
+      <h2 id="rules-h" data-i18n="xc.rulesTitle">How X counts</h2>
+      <ol>
+        <li data-i18n="xc.rule1"></li>
+        <li data-i18n="xc.rule2"></li>
+        <li data-i18n="xc.rule3"></li>
+        <li data-i18n="xc.rule4"></li>
+      </ol>
+      <p class="small muted"><span data-i18n="xc.sources">Sources:</span>
+        <a href="https://docs.x.com/fundamentals/counting-characters" data-i18n="xc.srcDocs">X developer docs, Counting characters</a>
+        ·
+        <a href="https://github.com/twitter/twitter-text" data-i18n="xc.srcLib">twitter-text, the library this tool uses</a></p>
+    </section>
+
+    <p id="sr-live" class="sr-only" aria-live="polite"></p>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="small">
+        <a href="../" data-i18n="site.tools">Tools</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/CREDITS.md" data-i18n="site.credits">Credits</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/tree/main/x-counter" data-i18n="site.source">Source</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

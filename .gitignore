@@ -1,0 +1,8 @@
+# agent notes kept local (accounts, local paths, progress)
+CLAUDE.local.md
+PROGRESS.md
+
+node_modules/
+
+# build output (none today; kept for the harness check)
+dist/
