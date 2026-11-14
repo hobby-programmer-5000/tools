@@ -1,0 +1,101 @@
+.kicker { display: inline-flex; align-items: center; gap: 6px; }
+.kicker .ic { width: 14px; height: 14px; }
+main h2 { font-size: 20px; margin: 0 0 var(--s2); letter-spacing: -0.01em; }
+
+/* Drop zone: the main card, same weight as x-counter's editor. */
+.card-box { background: var(--surface); border: 2px solid var(--text); border-radius: 14px; box-shadow: 6px 6px 0 var(--shadow); overflow: hidden; }
+.drop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: 180px; padding: var(--s5) var(--s4); text-align: center; cursor: pointer;
+  border-bottom: 1px dashed var(--border);
+}
+.drop:hover, .drop.over { background: var(--surface-2); }
+.drop:focus-visible { outline: 3px solid var(--focus); outline-offset: -6px; }
+.drop-ic { width: 36px; height: 36px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.drop-title { font-weight: 650; }
+/* File names are shown only in system fonts: the web fonts are split by Unicode range and
+   would fetch new font files for new characters, which hints at the name. */
+.file-name {
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  color: var(--ok); font-size: 14px;
+}
+.file-name:empty { display: none; }
+.drop-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); padding: var(--s3) var(--s4); }
+.drop-foot p { margin: 0; }
+
+/* Settings */
+.settings { display: grid; gap: var(--s5); margin-top: var(--s6); }
+.field { margin: 0; padding: 0; border: 0; min-width: 0; }
+.field-k { display: block; margin: 0 0 var(--s2); padding: 0; font-size: 14px; font-weight: 650; color: var(--muted); }
+.field.two { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--s4) var(--s6); }
+
+.stepper { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.step, .stepper input, select {
+  height: 44px; font: 600 16px/1 var(--font); color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+.step { width: 44px; cursor: pointer; }
+.step:hover, select:hover { border-color: var(--accent); }
+.stepper input { width: 72px; text-align: center; font-variant-numeric: tabular-nums; }
+select { padding: 0 var(--s3); min-width: 180px; cursor: pointer; }
+.btn.sm { min-height: 44px; font-size: 14px; }
+
+/* Ratio: radio buttons styled as a segmented control, like x-counter's limit switch. */
+.seg { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.seg span { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 52px; padding: var(--s1) var(--s2); border-radius: 8px; color: var(--muted); text-align: center; }
+.seg b { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.seg small { font-size: 12px; line-height: 1.3; }
+.seg input:checked + span { background: var(--accent); color: var(--accent-ink); }
+.seg input:checked + span b { color: inherit; }
+.seg input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Optimize switch */
+.switch { display: inline-flex; align-items: center; gap: var(--s3); cursor: pointer; min-height: 44px; }
+.switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch .track { position: relative; flex: none; width: 46px; height: 26px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); transition: background .15s ease; }
+.switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--muted); transition: transform .15s ease, background .15s ease; }
+.switch input:checked + .track { background: var(--accent); border-color: var(--accent); }
+.switch input:checked + .track::after { transform: translateX(20px); background: var(--accent-ink); }
+.switch input:focus-visible + .track { outline: 2px solid var(--focus); outline-offset: 3px; }
+.switch > span:last-child { display: flex; flex-direction: column; line-height: 1.35; }
+
+/* Actions and status */
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); margin-top: var(--s6); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn[hidden] { display: none; }
+.hint { margin-left: var(--s1); }
+@media (hover: none) and (pointer: coarse) { .hint { display: none; } }
+.sf-status { margin: var(--s3) 0 0; min-height: 1.6em; font-size: 14px; color: var(--muted); overflow-wrap: anywhere; }
+.sf-status.error { color: var(--pink); font-weight: 600; }
+.bar { height: 8px; margin-top: var(--s2); border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.bar[hidden] { display: none; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: inherit; transition: width .15s ease; }
+.private { display: flex; align-items: flex-start; gap: var(--s2); margin: var(--s4) 0 0; }
+.private .ic { width: 16px; height: 16px; margin-top: 2px; color: var(--ok); }
+
+/* Previews */
+.views, .full, .rules { margin-top: var(--s7); }
+.views-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2); }
+.views-head h2 { margin: 0; }
+.zoom { display: inline-flex; align-items: center; gap: var(--s2); font-size: 14px; color: var(--muted); }
+.zoom select { min-width: 96px; height: 40px; }
+.pane { margin-top: var(--s4); }
+.pane h3 { margin: 0 0 var(--s2); font-size: 15px; display: flex; flex-wrap: wrap; gap: 2px var(--s2); align-items: baseline; }
+.scroller {
+  position: relative; height: clamp(180px, 34vh, 340px); overflow: auto; padding: var(--s2);
+  background: repeating-conic-gradient(var(--surface-2) 0 25%, var(--surface) 0 50%) 0 0 / 16px 16px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+}
+.scroller canvas { display: block; }
+.empty { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; }
+.has-image .empty { display: none; }
+
+/* Full app card */
+.full { padding: var(--s5); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.full p { margin: 0 0 var(--s4); color: var(--muted); max-width: 64ch; }
+
+.rules ol { margin: var(--s3) 0; padding-left: 1.3em; display: grid; gap: var(--s2); }
+.rules li { padding-left: 4px; }

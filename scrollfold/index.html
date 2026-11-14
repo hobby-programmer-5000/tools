@@ -1,102 +1,143 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="auto">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
-<meta name="color-scheme" content="light dark">
-<title>Scrollfold</title>
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="icon" href="icon.png" type="image/png" sizes="256x256">
-<link rel="apple-touch-icon" href="icon.png">
-<link rel="stylesheet" href="app.css">
-<script type="module" src="app.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrollfold · hp5000 tools</title>
+  <meta name="description" content="Split one wide image into up to 20 equal strips for an X multi-image post, and preview how they line up. Runs in your browser; the image is never uploaded.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Scrollfold">
+  <meta property="og:description" content="Split one wide image into up to 20 strips for an X post, and preview them first.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/350819703?v=4&s=460">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/350819703?v=4&s=64">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script src="../assets/i18n.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script src="app.js" type="module"></script>
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <img src="icon.svg" alt="" width="28" height="28">
-    <div>
-      <h1>Scrollfold</h1>
-      <p data-i18n="tagline"></p>
-    </div>
-  </div>
-  <div class="top-actions">
-    <span class="mode" id="mode"></span>
-    <a class="ghost" id="repo-link" href="https://github.com/hobby-programmer-5000/scrollfold" target="_blank" rel="noopener" data-i18n="repo"></a>
-    <button type="button" class="ghost" id="credits-btn" data-i18n="credits"></button>
-    <button type="button" class="ghost" id="lang-btn"></button>
-  </div>
-</header>
-
-<main class="layout">
-  <aside class="panel" aria-label="Options">
-    <label class="drop" id="drop" tabindex="0">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-      <span data-i18n="drop"></span>
-      <small id="file-name" class="file-name"></small>
-      <input type="file" id="file" accept="image/*,.tif,.tiff,.tga,.jp2,.j2k,.qoi,.ppm,.pcx" hidden>
-    </label>
-    <button type="button" class="secondary" id="browse" data-i18n="choose" title="Ctrl+O"></button>
-    <p class="note"><span id="accepts"></span><br><span data-i18n="privacy"></span></p>
-
-    <div class="field">
-      <label for="count" data-i18n="count"></label>
-      <div class="row">
-        <button type="button" class="step" id="minus" aria-label="−">−</button>
-        <input type="number" id="count" min="1" max="20" value="20" inputmode="numeric">
-        <button type="button" class="step" id="plus" aria-label="+">+</button>
-        <button type="button" class="ghost" id="auto" data-i18n="auto"></button>
+  <span hidden data-i18n-title="sf.title"></span>
+  <a class="skip" href="#drop" data-i18n="site.skip">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="mark" href="https://hobby-programmer-5000.github.io/" data-i18n-label="site.home" aria-label="Home">hp<span>5000</span></a>
+      <a class="crumb" href="../">/tools</a>
+      <div class="controls">
+        <button class="icon-btn" id="lang" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-languages"/></svg><span id="lang-label">KO</span></button>
+        <button class="icon-btn" id="theme" type="button"><svg class="ic" aria-hidden="true"><use id="theme-icon" href="../assets/icons.svg#i-monitor"/></svg></button>
       </div>
     </div>
+  </header>
 
-    <fieldset class="field">
-      <legend data-i18n="ratio"></legend>
-      <div class="segmented" id="ratio"></div>
-    </fieldset>
-
-    <div class="field">
-      <label for="fit" data-i18n="fit_mode"></label>
-      <select id="fit"></select>
+  <main class="wrap">
+    <div class="page-head">
+      <p class="kicker"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-x"/></svg> ./scrollfold</p>
+      <h1 data-i18n="sf.title">Scrollfold</h1>
+      <p data-i18n="sf.lead">Split one wide image into up to 20 strips for an X post, and see how they line up before you post.</p>
     </div>
 
-    <label class="switch">
-      <input type="checkbox" id="optimize" role="switch" checked>
-      <span class="track" aria-hidden="true"></span>
-      <span><span data-i18n="optimize"></span><small data-i18n="optimize_hint"></small></span>
-    </label>
+    <section class="card-box" aria-labelledby="drop-label">
+      <label class="drop" id="drop" tabindex="0">
+        <svg class="drop-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span id="drop-label" class="drop-title" data-i18n="sf.drop">Drop an image here or paste it (Ctrl+V)</span>
+        <span id="file-name" class="file-name"></span>
+        <input type="file" id="file" accept="image/*" hidden>
+      </label>
+      <div class="drop-foot">
+        <button class="btn quiet" id="browse" type="button" title="Ctrl+O" data-i18n="sf.choose">Choose file…</button>
+        <p class="small muted" data-i18n="sf.accepts">PNG, JPEG, WebP, AVIF, GIF, BMP, ICO · up to 400 MP</p>
+      </div>
+    </section>
+
+    <section class="settings" aria-label="Options">
+      <div class="field">
+        <p class="field-k" id="count-k" data-i18n="sf.count">Strips</p>
+        <div class="stepper" role="group" aria-labelledby="count-k">
+          <button type="button" class="step" id="minus" aria-label="−">−</button>
+          <input type="number" id="count" min="1" max="20" value="20" inputmode="numeric" aria-labelledby="count-k">
+          <button type="button" class="step" id="plus" aria-label="+">+</button>
+          <button type="button" class="btn quiet sm" id="auto" data-i18n="sf.auto">Auto</button>
+        </div>
+      </div>
+
+      <fieldset class="field">
+        <legend class="field-k" data-i18n="sf.ratio">Strip ratio</legend>
+        <div class="seg" id="ratio"></div>
+      </fieldset>
+
+      <div class="field two">
+        <div>
+          <label class="field-k" for="fit" data-i18n="sf.fitMode">If it doesn't fit</label>
+          <select id="fit"></select>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="optimize" role="switch" checked>
+          <span class="track" aria-hidden="true"></span>
+          <span><b data-i18n="sf.optimize">Optimize for X</b><span class="small muted" data-i18n="sf.optimizeHint">JPEG, ≤4096 px, ≤5 MB each</span></span>
+        </label>
+      </div>
+    </section>
 
     <div class="actions">
-      <button type="button" class="primary" id="save" disabled title="Ctrl+S"></button>
-      <button type="button" class="secondary" id="cancel" hidden data-i18n="cancel" title="Esc"></button>
-      <button type="button" class="secondary" id="save-dir" disabled data-i18n="save_dir" hidden></button>
-      <button type="button" class="secondary" id="open-folder" disabled data-i18n="open_folder" hidden></button>
+      <button class="btn primary" id="save" type="button" disabled title="Ctrl+S"><span data-i18n="sf.saveZip">Download zip</span></button>
+      <button class="btn quiet" id="save-dir" type="button" disabled hidden data-i18n="sf.saveDir">Save to a folder…</button>
+      <button class="btn quiet" id="cancel" type="button" hidden title="Esc" data-i18n="sf.cancel">Cancel</button>
+      <span class="hint muted small"><kbd>Ctrl</kbd>+<kbd>S</kbd></span>
     </div>
-    <p class="status" id="status" role="status" aria-live="polite"></p>
-    <progress id="progress" max="1" value="0" hidden></progress>
-    <p class="note shortcuts" data-i18n="shortcuts"></p>
-  </aside>
+    <p id="status" class="sf-status" role="status" aria-live="polite"></p>
+    <div class="bar" id="bar" hidden><i></i></div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <p class="private small muted"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield"/></svg><span data-i18n="sf.private">Everything runs in your browser. Your image is never uploaded.</span></p>
 
-  <section class="views">
-    <div class="view-bar">
-      <label for="zoom" data-i18n="zoom"></label>
-      <select id="zoom"></select>
+    <section class="views" aria-labelledby="views-h">
+      <div class="views-head">
+        <h2 id="views-h" data-i18n="sf.previewTitle">Preview</h2>
+        <label class="zoom"><span data-i18n="sf.zoom">Zoom</span> <select id="zoom"></select></label>
+      </div>
+      <article class="pane">
+        <h3><span data-i18n="sf.source">Source</span> <span class="small muted" data-i18n="sf.sourceHint">red lines are cuts, dark is cropped away</span></h3>
+        <div class="scroller" id="src-scroll" tabindex="0"><canvas id="src-canvas"></canvas><p class="empty muted small" data-i18n="sf.emptyPane">Open an image to see it here.</p></div>
+      </article>
+      <article class="pane">
+        <h3><span data-i18n="sf.preview">In the post</span> <span class="small muted" data-i18n="sf.previewHint">strips side by side</span></h3>
+        <div class="scroller" id="prev-scroll" tabindex="0"><canvas id="prev-canvas"></canvas><p class="empty muted small" data-i18n="sf.emptyPane">Open an image to see it here.</p></div>
+      </article>
+    </section>
+
+    <section class="full" aria-labelledby="full-h">
+      <h2 id="full-h" data-i18n="sf.fullTitle">Want it on your computer?</h2>
+      <p data-i18n="sf.fullLead">This page is the browser version. The full Scrollfold also has a desktop app and a local mode that save straight to a folder and open more formats (TIFF, TGA, JPEG 2000 …).</p>
+      <a class="btn" href="https://github.com/hobby-programmer-5000/scrollfold"><span data-i18n="sf.fullLink">Get the full app on GitHub</span><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-arrow-right"/></svg></a>
+    </section>
+
+    <section class="rules" aria-labelledby="rules-h">
+      <h2 id="rules-h" data-i18n="sf.rulesTitle">How it splits</h2>
+      <ol>
+        <li data-i18n="sf.rule1"></li>
+        <li data-i18n="sf.rule2"></li>
+        <li data-i18n="sf.rule3"></li>
+        <li data-i18n="sf.rule4"></li>
+      </ol>
+      <p class="small muted"><span data-i18n="sf.sources">Sources:</span>
+        <a href="https://github.com/hobby-programmer-5000/scrollfold/blob/main/reference.md" data-i18n="sf.srcRef">the 15 measured X posts and other references</a></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="small">
+        <a href="../" data-i18n="site.tools">Tools</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/CREDITS.md" data-i18n="site.credits">Credits</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/scrollfold" data-i18n="site.source">Source</a>
+      </p>
     </div>
-    <article class="pane">
-      <h2><span data-i18n="source"></span> <small data-i18n="source_hint"></small></h2>
-      <div class="scroller" id="src-scroll" tabindex="0"><canvas id="src-canvas"></canvas></div>
-    </article>
-    <article class="pane">
-      <h2><span data-i18n="preview"></span> <small data-i18n="preview_hint"></small></h2>
-      <div class="scroller" id="prev-scroll" tabindex="0"><canvas id="prev-canvas"></canvas></div>
-    </article>
-  </section>
-</main>
-
-<dialog id="credits">
-  <h2 data-i18n="credits"></h2>
-  <p data-i18n="credits_body"></p>
-  <form method="dialog"><button class="primary" data-i18n="close"></button></form>
-</dialog>
+  </footer>
 </body>
 </html>

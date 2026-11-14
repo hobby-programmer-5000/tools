@@ -29,7 +29,7 @@ Splits one wide image into up to 20 equal strips for an X multi-image post, and 
 - The image is processed in your browser and never uploaded. Results download as a `.zip`.
 - This is only the browser version. The full app, with a desktop app and a local mode that saves straight to a folder
   and opens more formats (TIFF, TGA, JPEG 2000 …), is at **[hobby-programmer-5000/scrollfold](https://github.com/hobby-programmer-5000/scrollfold)**.
-- `scrollfold/` is a copy of that repository's `web/` files; change them there, then copy them here.
+- The page here uses this site's look. Its splitting logic, `scrollfold/split.js`, is copied unchanged from that repository's `web/split.js`; change it there, then copy it here.
 
 ## Why I made this
 
@@ -58,7 +58,7 @@ index.html, assets/      tool list and shared look, language and theme
 assets/i18n.js           every UI string, English and Korean
 tools.json               the list of tools (the landing page reads it too)
 x-counter/               the X post length counter (counter.js is the logic, app.js the page)
-scrollfold/              copy of the web files of hobby-programmer-5000/scrollfold (edit there, not here)
+scrollfold/              Scrollfold page (split.js is copied from hobby-programmer-5000/scrollfold; edit it there)
 vendor/                  twitter-text bundle, its licenses, and how it was built
 test/                    node:test
 ```

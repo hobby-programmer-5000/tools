@@ -14,7 +14,7 @@ No stock photos or illustrations are used.
 
 | What | License | Where |
 |---|---|---|
-| [Scrollfold](https://github.com/hobby-programmer-5000/scrollfold) web version (7 files from its `web/`, incl. its own icon) | MIT, same owner. Uses no third-party code, fonts or icons; its credits are in that repository's THIRD-PARTY-NOTICES.md and reference.md | `scrollfold/` |
+| [Scrollfold](https://github.com/hobby-programmer-5000/scrollfold) splitting logic (`web/split.js`, copied unchanged; the page around it was written for this site) | MIT, same owner. Uses no third-party code; its own credits are in that repository's THIRD-PARTY-NOTICES.md and reference.md | `scrollfold/split.js` |
 
 ## Fonts
 

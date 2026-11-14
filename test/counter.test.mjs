@@ -169,9 +169,18 @@ test("8b. every tool in tools.json has a page", () => {
   }
 });
 
-test("8c. scrollfold copy has its minimum web files", () => {
-  for (const f of ["index.html", "app.css", "app.js", "split.js", "i18n.js", "icon.svg", "icon.png"])
+test("8c. scrollfold page has its files", () => {
+  for (const f of ["index.html", "style.css", "app.js", "split.js"])
     assert.ok(existsSync(join(root, "scrollfold", f)), `scrollfold/${f}`);
+});
+
+test("8d. scrollfold split.js: 2003 px into 20 equal, touching 100 px strips", async () => {
+  const S = await import("../scrollfold/split.js");
+  const boxes = S.stripBoxes(2003, 500, 20);
+  assert.equal(boxes.length, 20);
+  for (const [x0, , x1] of boxes) assert.equal(x1 - x0, 100);
+  for (let i = 1; i < 20; i++) assert.equal(boxes[i][0], boxes[i - 1][2]);
+  assert.equal(S.suggestCount(2500, 500, S.RATIOS["1:2"]), 10);
 });
 
 test("breakdown() works on its own for empty text", () => {

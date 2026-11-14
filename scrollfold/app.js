@@ -1,48 +1,36 @@
-// Scrollfold web UI. Works as a static page (zip download) or with server.py (saves to output/).
+// Scrollfold page for the tools site: browser only, results as a zip (or a folder in Chromium).
+// The splitting logic is split.js, copied unchanged from hobby-programmer-5000/scrollfold (web/split.js).
 import * as S from "./split.js";
-import { t } from "./i18n.js";
 
 const $ = (id) => document.getElementById(id);
+const t = (k, v) => window.Site.t(k, v);
 const GAP = 6;
 const LINE = "#ff4040";
 const ZOOMS = ["fit", 10, 25, 50, 100, 200];
 const MAX_VIEW = 16000; // canvas side cap for previews
 
-const state = {
-  lang: (() => { try { return localStorage.getItem("scrollfold.lang") || (navigator.language.startsWith("ko") ? "ko" : "en"); } catch { return "en"; } })(),
-  file: null, bmp: null, name: "", ratioKey: S.DEFAULT_RATIO, fit: S.DEFAULT_FIT,
-  server: null, // {token, output} when served by server.py
-  resultId: null, busy: false,
-};
+const state = { file: null, bmp: null, name: "", ratioKey: S.DEFAULT_RATIO, fit: S.DEFAULT_FIT, busy: false, cancel: false };
 
 // ------------------------------------------------------------------ text
 function applyLang() {
-  document.documentElement.lang = state.lang;
-  for (const el of document.querySelectorAll("[data-i18n]")) el.textContent = t(state.lang, el.dataset.i18n);
-  $("repo-link").title = t(state.lang, "repo_title");
-  $("lang-btn").textContent = t(state.lang, "lang");
-  $("mode").textContent = t(state.lang, state.server ? "mode_server" : "mode_static");
-  $("save").textContent = t(state.lang, state.server ? "save_server" : "save_zip");
-  $("accepts").textContent = t(state.lang, state.server ? "accepts_server" : "accepts_static");
   buildRatio();
-  const fit = $("fit");
-  fit.replaceChildren(...S.FIT_MODES.map((m) => new Option(t(state.lang, "fit_" + m), m, false, m === state.fit)));
+  $("fit").replaceChildren(...S.FIT_MODES.map((m) => new Option(t("sf.fit_" + m), m, false, m === state.fit)));
   const zoom = $("zoom"), cur = zoom.value || "fit";
-  zoom.replaceChildren(...ZOOMS.map((z) => new Option(z === "fit" ? t(state.lang, "fit") : `${z}%`, String(z), false, String(z) === cur)));
+  zoom.replaceChildren(...ZOOMS.map((z) => new Option(z === "fit" ? t("sf.fit") : `${z}%`, String(z), false, String(z) === cur)));
   render();
 }
 
 function buildRatio() {
-  const box = $("ratio");
-  box.replaceChildren(...Object.keys(S.RATIOS).map((k) => {
+  $("ratio").replaceChildren(...Object.keys(S.RATIOS).map((k) => {
     const label = document.createElement("label");
     const input = Object.assign(document.createElement("input"), { type: "radio", name: "ratio", value: k, checked: k === state.ratioKey });
     input.addEventListener("change", () => { state.ratioKey = k; autoCount(); });
     const span = document.createElement("span");
-    span.textContent = k === "original" ? t(state.lang, "ratio_original") : k;
+    const b = document.createElement("b");
+    b.textContent = k === "original" ? t("sf.ratioOriginal") : k;
     const small = document.createElement("small");
-    small.textContent = t(state.lang, "hint_" + k);
-    span.append(small);
+    small.textContent = t("sf.hint_" + k);
+    span.append(b, small);
     label.append(input, span);
     return label;
   }));
@@ -66,9 +54,14 @@ function autoCount() {
   if (state.bmp) $("count").value = S.suggestCount(state.bmp.width, state.bmp.height, ratio());
   render();
 }
+function canvas(w, h) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  return c;
+}
 
 // Draw the fitted image (what gets split) into ctx, in fitted coordinates.
-let blurBg = null; // small blurred cover image, cached per (image, plan size)
+let blurBg = null; // small blurred cover image, cached per plan size
 function drawFitted(ctx, p) {
   const b = state.bmp;
   if (state.fit !== "crop" && ratio()) {
@@ -77,7 +70,7 @@ function drawFitted(ctx, p) {
       if (!blurBg || blurBg.key !== key) {
         const s = Math.max(p.w / b.width, p.h / b.height);
         const bw = Math.max(p.w, Math.round(b.width * s)), bh = Math.max(p.h, Math.round(b.height * s));
-        const c = new OffscreenCanvasOr(Math.max(1, bw >> 3), Math.max(1, bh >> 3));
+        const c = canvas(Math.max(1, bw >> 3), Math.max(1, bh >> 3));
         const g = c.getContext("2d");
         g.filter = "blur(6px) brightness(75%)";
         g.drawImage(b, 0, 0, c.width, c.height);
@@ -92,31 +85,24 @@ function drawFitted(ctx, p) {
   const [cx0, cy0] = p.crop;
   ctx.drawImage(b, p.offset[0] - cx0, p.offset[1] - cy0);
 }
-function OffscreenCanvasOr(w, h) {
-  const c = document.createElement("canvas");
-  c.width = w; c.height = h;
-  return c;
-}
 
 function scaleFor(w, h, scroller, extraW = 0) {
   const z = $("zoom").value;
-  let s;
-  if (z === "fit" || !z) s = Math.min((scroller.clientWidth - extraW - 2) / w, (scroller.clientHeight - 2) / h);
-  else s = Number(z) / 100;
+  const s = z === "fit" || !z ? Math.min((scroller.clientWidth - extraW - 2) / w, (scroller.clientHeight - 2) / h) : Number(z) / 100;
   return Math.max(0.001, Math.min(s, MAX_VIEW / Math.max(w, h)));
 }
 
 // ------------------------------------------------------------------ render previews
 function render() {
   const srcC = $("src-canvas"), prevC = $("prev-canvas");
+  document.body.classList.toggle("has-image", !!state.bmp);
   if (!state.bmp) { srcC.width = srcC.height = prevC.width = prevC.height = 0; return; }
-  state.fit = $("fit").value || state.fit;
   const n = count(), r = ratio(), b = state.bmp;
   let p, boxes;
   try {
     p = S.plan(b.width, b.height, n, r, state.fit);
     boxes = S.stripBoxes(p.w, p.h, n);
-  } catch (e) { setStatus(e instanceof S.SplitError ? t(state.lang, e.kind, e.info) : e.message, true); return; }
+  } catch (e) { setStatus(e instanceof S.SplitError ? t("sf." + e.kind, e.info) : e.message, true); return; }
 
   // Source pane. Crop: whole source, dropped area dimmed. Pad: the padded canvas.
   const cropMode = r && state.fit === "crop";
@@ -157,9 +143,9 @@ function render() {
     pg.restore();
   });
 
-  let msg = t(state.lang, "loaded", { name: state.file.name, w: b.width, h: b.height, n, sw, sh: p.h });
-  if (b.width * b.height > S.LARGE_WARN_PIXELS) msg += " · ⚠ " + t(state.lang, "large", { mp: Math.round((b.width * b.height) / 1e6) });
-  if (cropMode && (p.w !== b.width || p.h !== b.height)) msg += " · " + t(state.lang, "kept", { pct: Math.round((100 * p.w * p.h) / (b.width * b.height)) });
+  let msg = t("sf.loaded", { name: state.file.name, w: b.width, h: b.height, n, sw, sh: p.h });
+  if (b.width * b.height > S.LARGE_WARN_PIXELS) msg += " · ⚠ " + t("sf.large", { mp: Math.round((b.width * b.height) / 1e6) });
+  if (cropMode && (p.w !== b.width || p.h !== b.height)) msg += " · " + t("sf.kept", { pct: Math.round((100 * p.w * p.h) / (b.width * b.height)) });
   setStatus(msg);
 }
 
@@ -170,7 +156,7 @@ async function makeStrip(p, box, optimize) {
   const sw = box[2] - box[0];
   let [w, h] = optimize ? S.fitWithin(sw, p.h, S.X_MAX_SIDE) : [sw, p.h];
   for (;;) {
-    const c = OffscreenCanvasOr(w, h);
+    const c = canvas(w, h);
     const g = c.getContext("2d");
     if (optimize) { g.fillStyle = "#fff"; g.fillRect(0, 0, w, h); }
     g.imageSmoothingQuality = "high";
@@ -178,7 +164,7 @@ async function makeStrip(p, box, optimize) {
     g.translate(-box[0], 0);
     drawFitted(g, p);
     if (!optimize) return toBlob(c, "image/png");
-    // Binary search over the quality list: best quality that fits, in ~4 encodes instead of up to 10.
+    // Binary search over the quality list: best quality that fits.
     let lo = 0, hi = S.JPEG_QUALITIES.length - 1, best = null;
     while (lo <= hi) {
       const mid = (lo + hi) >> 1;
@@ -197,57 +183,33 @@ async function* strips() {
   const optimize = $("optimize").checked, ext = optimize ? "jpg" : "png";
   for (let i = 0; i < n; i++) {
     if (state.cancel) { const err = new Error("cancelled"); err.name = "Cancelled"; err.done = i; err.total = n; throw err; }
-    setStatus(t(state.lang, "working", { i: i + 1, n }));
-    $("progress").value = i / n;
+    setStatus(t("sf.working", { i: i + 1, n }));
+    $("bar").firstElementChild.style.width = `${(100 * i) / n}%`;
     yield { name: S.stripName(i + 1, n, ext), blob: await makeStrip(p, boxes[i], optimize) };
     await new Promise((r) => setTimeout(r)); // keep the page responsive
   }
-}
-
-async function api(path, opts = {}) {
-  const res = await fetch(path, { ...opts, headers: { "X-Scrollfold-Token": state.server.token, ...(opts.headers || {}) } });
-  if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
-  return res.json();
 }
 
 async function run(kind) {
   if (!state.bmp || state.busy) return;
   state.busy = true;
   state.cancel = false;
-  let folderShown = "";
   for (const id of ["save", "save-dir"]) $(id).disabled = true;
-  $("progress").hidden = false;
+  $("bar").hidden = false;
   $("cancel").hidden = false;
   try {
     const base = S.safeName(state.name);
-    if (kind === "server") {
-      // The folder is created when the first strip is ready, so cancelling early leaves nothing behind.
-      let job = null, n = 0;
-      for await (const f of strips()) {
-        if (!job) {
-          job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: base }) });
-          folderShown = job.folder;
-          state.resultId = job.id;
-          $("open-folder").disabled = false;
-        }
-        await api(`/api/jobs/${job.id}/${f.name}`, { method: "PUT", body: f.blob });
-        n++;
-      }
-      state.resultId = job.id;
-      $("open-folder").disabled = false;
-      setStatus(t(state.lang, "saved", { n, path: job.folder }));
-    } else if (kind === "dir") {
+    if (kind === "dir") {
       const root = await window.showDirectoryPicker({ mode: "readwrite" });
       let dirName = base, k = 2;
       for (;;) { try { await root.getDirectoryHandle(dirName); dirName = `${base}_${k++}`; } catch { break; } }
       const dir = await root.getDirectoryHandle(dirName, { create: true });
-      folderShown = `${root.name}/${dirName}`;
       let n = 0;
       for await (const f of strips()) {
         const w = await (await dir.getFileHandle(f.name, { create: true })).createWritable();
         await w.write(f.blob); await w.close(); n++;
       }
-      setStatus(t(state.lang, "saved", { n, path: `${root.name}/${dirName}` }));
+      setStatus(t("sf.saved", { n, path: `${root.name}/${dirName}` }));
     } else {
       const files = [];
       for await (const f of strips()) files.push({ name: `${base}/${f.name}`, data: new Uint8Array(await f.blob.arrayBuffer()) });
@@ -255,53 +217,43 @@ async function run(kind) {
       const a = Object.assign(document.createElement("a"), { href: url, download: `${base}.zip` });
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 60000);
-      setStatus(t(state.lang, "zipped", { file: `${base}.zip` }));
+      setStatus(t("sf.zipped", { file: `${base}.zip` }));
     }
+    window.Site.toast(document.getElementById("status").textContent);
   } catch (e) {
-    if (e.name === "Cancelled") {
-      const where = e.done && folderShown ? t(state.lang, "cancelled_where", { path: folderShown }) : "";
-      setStatus(t(state.lang, "cancelled", { n: e.done, total: e.total, where }));
-    } else if (e.name !== "AbortError") setStatus(t(state.lang, "error", { err: e.message }), true);
+    if (e.name === "Cancelled") setStatus(t("sf.cancelled", { n: e.done, total: e.total }));
+    else if (e.name !== "AbortError") setStatus(t("sf.error", { err: e.message }), true);
     else render();
   } finally {
     state.busy = false;
-    $("progress").hidden = true;
+    $("bar").hidden = true;
     $("cancel").hidden = true;
     for (const id of ["save", "save-dir"]) $(id).disabled = !state.bmp;
-    $("save").focus(); // after re-enabling, or focus is lost
+    $("save").focus();
   }
 }
 
 // ------------------------------------------------------------------ loading
 async function load(file) {
   if (!file) return;
-  if (file.size === 0) { setStatus(t(state.lang, "empty"), true); return; }
+  if (file.size === 0) { setStatus(t("sf.empty"), true); return; }
   try {
-    let bmp;
-    try {
-      bmp = await createImageBitmap(file);
-    } catch (err) {
-      // TIFF, TGA, JPEG 2000, ... : browsers can't decode them, but the local server (Pillow) can.
-      if (!state.server) throw err;
-      const res = await fetch("/api/decode", { method: "POST", headers: { "X-Scrollfold-Token": state.server.token }, body: file });
-      if (!res.ok) throw new Error(await res.text());
-      bmp = await createImageBitmap(await res.blob());
-    }
+    const bmp = await createImageBitmap(file, { imageOrientation: "from-image" });
     const px = bmp.width * bmp.height;
     if (px > S.MAX_PIXELS) {
       bmp.close();
-      setStatus(t(state.lang, "too_large", { mp: Math.round(px / 1e6) }), true);
+      setStatus(t("sf.tooLarge", { mp: Math.round(px / 1e6) }), true);
       return;
     }
     state.bmp?.close?.();
-    Object.assign(state, { file, bmp, name: file.name.replace(/\.[^.]+$/, "") || "image", resultId: null });
+    Object.assign(state, { file, bmp, name: file.name.replace(/\.[^.]+$/, "") || "image" });
     blurBg = null;
     $("file-name").textContent = file.name;
-    $("file-name").title = file.name; // full name on hover; CSS truncates long names
-    $("save").disabled = false; $("save-dir").disabled = false; $("open-folder").disabled = true;
+    $("file-name").title = file.name;
+    $("save").disabled = false; $("save-dir").disabled = false;
     autoCount();
   } catch {
-    setStatus(t(state.lang, state.server ? "not_image" : "not_image_static"), true);
+    setStatus(t("sf.notImage"), true);
   }
 }
 
@@ -323,11 +275,8 @@ function wire() {
   $("auto").addEventListener("click", autoCount);
   $("fit").addEventListener("change", () => { state.fit = $("fit").value; render(); });
   $("zoom").addEventListener("change", render);
-  $("save").addEventListener("click", () => run(state.server ? "server" : "zip"));
+  $("save").addEventListener("click", () => run("zip"));
   $("save-dir").addEventListener("click", () => run("dir"));
-  $("open-folder").addEventListener("click", () => state.resultId && api(`/api/jobs/${state.resultId}/open`, { method: "POST" }).catch((e) => setStatus(e.message, true)));
-  $("lang-btn").addEventListener("click", () => { state.lang = state.lang === "en" ? "ko" : "en"; try { localStorage.setItem("scrollfold.lang", state.lang); } catch {} applyLang(); });
-  $("credits-btn").addEventListener("click", () => $("credits").showModal());
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && state.busy) { state.cancel = true; return; }
     if (!(e.ctrlKey || e.metaKey)) return;
@@ -335,23 +284,13 @@ function wire() {
     if (e.key === "s") { e.preventDefault(); $("save").click(); }
   });
   let job; new ResizeObserver(() => { clearTimeout(job); job = setTimeout(render, 120); }).observe($("src-scroll"));
-  // Shift+wheel scrolls sideways on platforms that don't do it already.
   for (const id of ["src-scroll", "prev-scroll"]) $(id).addEventListener("wheel", (e) => {
     if (e.shiftKey && !e.deltaX) { e.preventDefault(); e.currentTarget.scrollLeft += e.deltaY; }
   }, { passive: false });
 }
 
-async function init() {
-  try {
-    const res = await fetch("/api/info");
-    if (res.ok) state.server = await res.json();
-  } catch { /* static hosting */ }
-  if (state.server) $("open-folder").hidden = false;
-  if (!state.server && "showDirectoryPicker" in window) $("save-dir").hidden = false;
-  wire();
-  applyLang();
-}
-const ready = init();
-// Test hook for web/selftest.html: only exposed when the page is opened with #selftest, after init finished.
-if (location.hash === "#selftest") ready.then(() => { window.scrollfold = api_; });
-const api_ = { load, strips, state, count, setFit: (m) => { state.fit = m; $("fit").value = m; } };
+if ("showDirectoryPicker" in window) $("save-dir").hidden = false;
+wire();
+window.Site.onChange(applyLang);
+// Test hook, only with #selftest.
+if (location.hash === "#selftest") window.scrollfold = { load, strips, state, count };
