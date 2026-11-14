@@ -25,19 +25,26 @@ jobs:
           node-version: 22
       - run: node --test
 
-  deploy:
+  build:
     # A failing test stops the deploy.
     needs: test
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
+  # Separate job, as in GitHub's Pages template: when upload and deploy ran in one job,
+  # deploy-pages looked up the artifact before it was visible and found none.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
