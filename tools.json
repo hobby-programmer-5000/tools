@@ -23,6 +23,30 @@
         ]
       },
       "added": "2026-11-14"
+    },
+    {
+      "slug": "scrollfold",
+      "name": {
+        "en": "Scrollfold",
+        "ko": "Scrollfold"
+      },
+      "summary": {
+        "en": "Splits one wide image into up to 20 strips for an X multi-image post and previews how they line up. Your image stays in the browser.",
+        "ko": "가로로 긴 이미지 하나를 X 여러 장 게시물용 띠 최대 20개로 자르고, 이어 붙은 모습을 미리 보여 줍니다. 이미지는 브라우저 밖으로 나가지 않습니다."
+      },
+      "tags": {
+        "en": [
+          "X",
+          "image",
+          "KR/EN"
+        ],
+        "ko": [
+          "X",
+          "이미지",
+          "한/영"
+        ]
+      },
+      "added": "2026-11-14"
     }
   ]
 }

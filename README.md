@@ -21,6 +21,16 @@ Counts a post the way X does, and shows where a long post gets cut.
 - Copy (Ctrl+Enter), clear with undo, and a draft that stays in this browser only.
 - English and Korean, light and dark.
 
+### Scrollfold — [`/tools/scrollfold/`](https://hobby-programmer-5000.github.io/tools/scrollfold/)
+
+Splits one wide image into up to 20 equal strips for an X multi-image post, and previews how they line up.
+
+- Strip ratio presets measured from real X posts, crop or pad (never stretch), "Optimize for X" (≤ 4096 px, ≤ 5 MB JPEG).
+- The image is processed in your browser and never uploaded. Results download as a `.zip`.
+- This is only the browser version. The full app, with a desktop app and a local mode that saves straight to a folder
+  and opens more formats (TIFF, TGA, JPEG 2000 …), is at **[hobby-programmer-5000/scrollfold](https://github.com/hobby-programmer-5000/scrollfold)**.
+- `scrollfold/` is a copy of that repository's `web/` files; change them there, then copy them here.
+
 ## Why I made this
 
 Writing on X in Korean and English, a post fills up much faster than it looks: every Hangul syllable counts as 2.
@@ -48,6 +58,7 @@ index.html, assets/      tool list and shared look, language and theme
 assets/i18n.js           every UI string, English and Korean
 tools.json               the list of tools (the landing page reads it too)
 x-counter/               the X post length counter (counter.js is the logic, app.js the page)
+scrollfold/              copy of the web files of hobby-programmer-5000/scrollfold (edit there, not here)
 vendor/                  twitter-text bundle, its licenses, and how it was built
 test/                    node:test
 ```

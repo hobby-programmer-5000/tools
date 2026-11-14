@@ -10,6 +10,12 @@ No stock photos or illustrations are used.
 | [twitter-text](https://github.com/twitter/twitter-text) 3.1.0, X's official character counting library | Apache-2.0, © Twitter, Inc. | `vendor/` (bundle, license texts, how it was built) |
 | twemoji-parser 11.0.2, punycode 1.4.1, @babel/runtime, core-js 2.6.12 (dependencies of twitter-text) | MIT | `vendor/` |
 
+## Copied from the owner's other repositories
+
+| What | License | Where |
+|---|---|---|
+| [Scrollfold](https://github.com/hobby-programmer-5000/scrollfold) web version (7 files from its `web/`, incl. its own icon) | MIT, same owner. Uses no third-party code, fonts or icons; its credits are in that repository's THIRD-PARTY-NOTICES.md and reference.md | `scrollfold/` |
+
 ## Fonts
 
 Loaded from jsDelivr, not stored in this repository.

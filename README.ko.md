@@ -21,6 +21,16 @@ X와 똑같은 방식으로 글자 수를 세고, 긴 글은 어디서 잘리는
 - 복사(Ctrl+Enter), 되돌리기가 있는 지우기, 이 브라우저에만 남는 초안.
 - 영어와 한국어, 밝게와 어둡게.
 
+### Scrollfold — [`/tools/scrollfold/`](https://hobby-programmer-5000.github.io/tools/scrollfold/)
+
+가로로 긴 이미지 하나를 X 여러 장 게시물용 같은 너비 띠 최대 20개로 자르고, 이어 붙은 모습을 미리 보여 줍니다.
+
+- 실제 X 게시물을 측정해 고른 조각 비율 프리셋, 자르기 또는 여백(늘리지 않음), "X 최적화"(4096px·5MB 이하 JPEG).
+- 이미지는 브라우저 안에서 처리되고 업로드되지 않습니다. 결과는 `.zip`으로 받습니다.
+- 여기 있는 것은 브라우저 버전뿐입니다. 데스크톱 앱, 폴더에 바로 저장하고 더 많은 포맷(TIFF, TGA, JPEG 2000 등)을 여는
+  로컬 모드가 있는 전체 앱은 **[hobby-programmer-5000/scrollfold](https://github.com/hobby-programmer-5000/scrollfold)**에 있습니다.
+- `scrollfold/`는 그 저장소 `web/` 파일의 복사본입니다. 그쪽에서 고친 뒤 여기로 복사하세요.
+
 ## 왜 만들었나
 
 X에 한국어와 영어를 섞어 쓰면 글이 보기보다 훨씬 빨리 찹니다. 한글은 한 글자가 2자로 세어지기 때문입니다.
@@ -48,6 +58,7 @@ index.html, assets/      도구 목록과 공통 모양, 언어·테마
 assets/i18n.js           모든 UI 문자열, 영어와 한국어
 tools.json               도구 목록 (랜딩 페이지도 이 파일을 읽음)
 x-counter/               X 글자 수 세기 (counter.js가 로직, app.js가 화면)
+scrollfold/              hobby-programmer-5000/scrollfold 웹 파일 복사본 (그쪽에서 고칠 것)
 vendor/                  twitter-text 번들, 라이선스, 만든 방법
 test/                    node:test
 ```

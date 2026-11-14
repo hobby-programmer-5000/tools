@@ -26,6 +26,7 @@ assets/i18n.js                   모든 UI 문자열 (en, ko)
 assets/icons.svg                 아이콘 스프라이트
 tools.json                       도구 목록. 랜딩 페이지 Playground 칸도 이 파일을 읽는다
 <slug>/index.html, app.js        도구 화면 (DOM)
+scrollfold/                      hobby-programmer-5000/scrollfold의 web/ 최소 7파일 복사본. 여기서 고치지 말고 원본에서 고친 뒤 복사한다. 사이트 공용 assets·폰트를 쓰지 않는 독립 페이지(CSP self)
 <slug>/<logic>.js                도구 로직 (DOM 없음, Node에서 테스트)
 vendor/                          외부 라이브러리 번들과 라이선스, 만든 방법
 test/                            node:test

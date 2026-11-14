@@ -169,6 +169,11 @@ test("8b. every tool in tools.json has a page", () => {
   }
 });
 
+test("8c. scrollfold copy has its minimum web files", () => {
+  for (const f of ["index.html", "app.css", "app.js", "split.js", "i18n.js", "icon.svg", "icon.png"])
+    assert.ok(existsSync(join(root, "scrollfold", f)), `scrollfold/${f}`);
+});
+
 test("breakdown() works on its own for empty text", () => {
   assert.deepEqual(
     { ...breakdown(""), weighted: 0 },

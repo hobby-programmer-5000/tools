@@ -8,6 +8,11 @@
 | [twitter-text](https://github.com/twitter/twitter-text) 3.1.0, `configs` v3 | The exact weight ranges (U+0000–U+10FF, U+2000–U+200D, U+2010–U+201F, U+2032–U+2037 weigh 1; everything else 2) and the 280 limit. The tool uses this library for the count itself. |
 | X Help Center, [longer posts](https://help.x.com/articles/232427) | Premium subscribers can post up to 25,000 characters. (The help center blocks automated readers, so this figure was confirmed through search results quoting it, not by opening the page.) |
 
+## Scrollfold
+
+Its sources (the 15 measured X posts behind the strip ratios, X's image limits, UX guidelines) are listed in
+[reference.md](https://github.com/hobby-programmer-5000/scrollfold/blob/main/reference.md) in its own repository.
+
 ## Design
 
 The look follows the landing page, whose design sources are listed in its
