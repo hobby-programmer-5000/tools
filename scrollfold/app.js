@@ -219,7 +219,7 @@ async function run(kind) {
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       setStatus(t("sf.zipped", { file: `${base}.zip` }));
     }
-    window.Site.toast(document.getElementById("status").textContent);
+    window.Site.toast(t("sf.toastDone"));   // no file or folder name here: the toast is drawn in the web font
   } catch (e) {
     if (e.name === "Cancelled") setStatus(t("sf.cancelled", { n: e.done, total: e.total }));
     else if (e.name !== "AbortError") setStatus(t("sf.error", { err: e.message }), true);
@@ -264,10 +264,13 @@ function wire() {
   $("browse").addEventListener("click", () => $("file").click());
   $("cancel").addEventListener("click", () => { state.cancel = true; });
   drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("file").click(); } });
-  for (const ev of ["dragenter", "dragover"]) drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); });
+  const hasFiles = (e) => !!e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
+  for (const ev of ["dragenter", "dragover"]) drop.addEventListener(ev, () => drop.classList.add("over"));
   for (const ev of ["dragleave", "drop"]) drop.addEventListener(ev, () => drop.classList.remove("over"));
-  drop.addEventListener("drop", (e) => { e.preventDefault(); load(e.dataTransfer.files[0]); });
-  window.addEventListener("paste", (e) => { const f = [...e.clipboardData.files].find((x) => x.type.startsWith("image/")); if (f) load(f); });
+  // An image can be dropped anywhere on the page. Without this the browser would open a file dropped outside the drop zone.
+  window.addEventListener("dragover", (e) => { if (hasFiles(e)) e.preventDefault(); });
+  window.addEventListener("drop", (e) => { if (hasFiles(e)) { e.preventDefault(); load(e.dataTransfer.files[0]); } });
+  window.addEventListener("paste", (e) => { const f = [...(e.clipboardData?.files ?? [])].find((x) => x.type.startsWith("image/")); if (f) load(f); });
 
   $("count").addEventListener("change", render);
   $("minus").addEventListener("click", () => { $("count").value = count() - 1; render(); });
