@@ -1,0 +1,105 @@
+main h2 { font-size: 20px; margin: 0 0 var(--s3); letter-spacing: -0.01em; }
+main h3 { font-size: 14px; font-weight: 650; color: var(--muted); margin: 0 0 var(--s2); }
+
+/* Drop zone: the main card, same as Scrollfold's. */
+.card-box { background: var(--surface); border: 2px solid var(--text); border-radius: 14px; box-shadow: 6px 6px 0 var(--shadow); overflow: hidden; }
+.drop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: 180px; padding: var(--s5) var(--s4); text-align: center; cursor: pointer;
+  border-bottom: 1px dashed var(--border);
+}
+.drop:hover, .drop.over { background: var(--surface-2); }
+.drop:focus-visible { outline: 3px solid var(--focus); outline-offset: -6px; }
+.drop-ic { width: 36px; height: 36px; fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.drop-title { font-weight: 650; }
+/* File names are shown only in system fonts: the web fonts are split by Unicode range and
+   would fetch new font files for new characters, which hints at the name. */
+.file-name, .pp-status {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+}
+.file-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ok); font-size: 14px; }
+.file-name:empty { display: none; }
+.drop-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); padding: var(--s3) var(--s4); }
+.drop-foot p { margin: 0; }
+
+.pp-status { margin: var(--s3) 0 0; min-height: 1.6em; font-size: 14px; color: var(--muted); overflow-wrap: anywhere; }
+.pp-status.error { color: var(--pink); font-weight: 600; }
+.private { display: flex; align-items: flex-start; gap: var(--s2); margin: var(--s2) 0 0; }
+.private .ic { width: 16px; height: 16px; margin-top: 2px; color: var(--ok); }
+
+/* Studio: brush row, then the painting next to the photo and the run controls. */
+.studio { margin-top: var(--s7); scroll-margin-top: 76px; }   /* clears the sticky top bar */
+.brushrow {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3);
+  padding: var(--s2) var(--s3); background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+}
+.brushrow .k { font-size: 14px; font-weight: 650; color: var(--muted); }
+.sizes { display: flex; flex-wrap: wrap; gap: 2px; list-style: none; margin: 0 var(--s3) 0 0; padding: 0; }
+.sizes li {
+  min-width: 34px; padding: 4px 3px; text-align: center; border-radius: 8px;   /* all eight fit one row at 375 px */
+  font: 600 14px/1.4 var(--mono); font-variant-numeric: tabular-nums; color: var(--muted);
+}
+.sizes li.on { background: var(--accent); color: var(--accent-ink); }
+.color { display: inline-flex; align-items: center; gap: var(--s2); }
+.swatch { width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border); background: #f4f1ec; }
+.hex { font: 14px var(--mono); min-width: 8ch; }
+
+.bench { display: grid; gap: var(--s5); margin-top: var(--s4); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .bench { grid-template-columns: minmax(0, 1fr) 230px; align-items: start; } }
+.stage { min-width: 0; }
+/* The paper keeps its own colours in both themes: it is the picture, not the page. */
+.easel {
+  position: relative; aspect-ratio: var(--ar, 1); width: min(100%, calc(78vh * var(--ar, 1))); margin: 0 auto;
+  background: #f4f1ec; border: 2px solid var(--text); border-radius: 6px; box-shadow: 6px 6px 0 var(--shadow); overflow: hidden;
+}
+.easel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cursor {
+  position: absolute; left: 0; top: 0; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%;
+  border: 1.5px solid rgb(255 255 255 / .95); box-shadow: 0 0 0 1px rgb(20 20 20 / .55), inset 0 0 0 1px rgb(20 20 20 / .55);
+  pointer-events: none; will-change: transform;
+}
+.cursor[hidden] { display: none; }
+.empty { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: var(--s4); text-align: center; }
+.easel .empty { color: #544e48; }
+.has-image .empty { display: none; }
+.dims { margin: var(--s2) 0 0; text-align: center; font-family: var(--mono); }
+
+.side { display: grid; gap: var(--s4); min-width: 0; align-content: start; }
+@media (max-width: 759px) { .side { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); } }
+.refframe {
+  position: relative; min-height: 96px; display: grid; place-items: center; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.refframe canvas { display: none; max-width: 100%; max-height: 230px; width: auto; height: auto; }
+.has-image .refframe canvas { display: block; }
+.passes { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.passes li { display: flex; align-items: center; gap: var(--s2); color: var(--muted); }
+.passes li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--muted); flex: none; }
+.passes li.done::before { background: var(--muted); }
+.passes li.on { color: var(--text); font-weight: 700; }
+.passes li.on::before { background: var(--accent); border-color: var(--accent); }
+.count { margin: 0 0 var(--s2); font: 14px var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: inherit; }
+.runrow { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.runrow .btn { flex: 1 1 auto; font-size: 14px; padding: 0 var(--s3); }
+.speed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.speed button {
+  min-height: 44px; border: 0; border-radius: 8px; background: none; cursor: pointer;
+  font: 650 14px/1 var(--font); color: var(--muted);
+}
+.speed button:hover:not(:disabled) { color: var(--text); }
+.speed button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); margin-top: var(--s6); }
+.btn:disabled, .speed button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.hint { margin-left: var(--s1); }
+@media (hover: none) and (pointer: coarse) { .hint { display: none; } }
+
+.rules { margin-top: var(--s7); }
+.rules ol, .rules ul { margin: var(--s3) 0; padding-left: 1.3em; display: grid; gap: var(--s2); }
+.need { padding: var(--s4) var(--s4) var(--s3); background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--yellow); border-radius: var(--radius); }
+.need h2 { font-size: 16px; }
+.need ul { font-size: 14px; gap: var(--s1); }
+.need p { margin: 0; }
+.rules li { padding-left: 4px; }

@@ -31,6 +31,16 @@ Splits one wide image into up to 20 equal strips for an X multi-image post, and 
   and opens more formats (TIFF, TGA, JPEG 2000 …), is at **[hobby-programmer-5000/scrollfold](https://github.com/hobby-programmer-5000/scrollfold)**.
 - The page here uses this site's look. Its splitting logic, `scrollfold/split.js`, is copied unchanged from that repository's `web/split.js`; change it there, then copy it here.
 
+### Photo Painter — [`/tools/photo-painter/`](https://hobby-programmer-5000.github.io/tools/photo-painter/)
+
+Paints any photo you give it, stroke by stroke, and saves the painting as a PNG.
+
+- Eight brushes from 126 px down to 3 px in four passes: block-in, form and color, refinement, fine details.
+- Each stroke takes its color from the blurred photo and lands where the painting is still furthest from it
+  (after Hertzmann's painterly rendering, SIGGRAPH 98). In the same browser, the same photo always gives the same painting.
+- Pause, restart, 1× or 3× speed, or jump to the end. Save PNG (Ctrl+S) saves the painting as it is at that moment, 840 px on the long side.
+- The photo is processed in your browser and never uploaded. No photo is bundled with the page.
+
 ## Why I made this
 
 Writing on X in Korean and English, a post fills up much faster than it looks: every Hangul syllable counts as 2.
@@ -49,7 +59,9 @@ Then open http://127.0.0.1:8766/. There is no build step.
 
 `test/counter.test.mjs` runs against the same vendored library the page loads. It checks 280/281 Latin characters,
 140/141 Hangul, links at 23, joined emoji at 2, the cut point, the 25,000 Premium limit, and that the breakdown
-adds up to the official count on 512 strings, 500 of them random. GitHub Actions runs the tests and deploys only if they pass.
+adds up to the official count on 512 strings, 500 of them random. `test/painter.test.mjs` checks that Photo Painter gives the same strokes
+for the same photo and seed, that every stroke's color is the blurred photo's color where the stroke starts, and that its scripts
+contain no fetch, XHR, WebSocket or beacon calls and no URLs. GitHub Actions runs the tests and deploys only if they pass.
 
 ## Project layout
 
@@ -59,6 +71,7 @@ assets/i18n.js           every UI string, English and Korean
 tools.json               the list of tools (the landing page reads it too)
 x-counter/               the X post length counter (counter.js is the logic, app.js the page)
 scrollfold/              Scrollfold page (split.js is copied from hobby-programmer-5000/scrollfold; edit it there)
+photo-painter/           Photo Painter (painter.js plans the strokes, app.js draws them)
 vendor/                  twitter-text bundle, its licenses, and how it was built
 test/                    node:test
 ```

@@ -27,6 +27,7 @@ assets/icons.svg                 아이콘 스프라이트
 tools.json                       도구 목록. 랜딩 페이지 Playground 칸도 이 파일을 읽는다
 <slug>/index.html, app.js        도구 화면 (DOM)
 scrollfold/                      Scrollfold 페이지(사이트 공용 틀, 문자열은 sf.*). split.js만 hobby-programmer-5000/scrollfold의 web/split.js 그대로 복사본이다. split.js는 여기서 고치지 말고 원본에서 고친 뒤 복사한다
+photo-painter/                   사진 그리기. painter.js가 붓 자국을 계획하고(로직), app.js가 그린다. 사진을 페이지에 넣지 않는다 (테스트 pp7)
 <slug>/<logic>.js                도구 로직 (DOM 없음, Node에서 테스트)
 vendor/                          외부 라이브러리 번들과 라이선스, 만든 방법
 test/                            node:test

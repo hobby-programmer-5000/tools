@@ -31,6 +31,16 @@ X와 똑같은 방식으로 글자 수를 세고, 긴 글은 어디서 잘리는
   로컬 모드가 있는 전체 앱은 **[hobby-programmer-5000/scrollfold](https://github.com/hobby-programmer-5000/scrollfold)**에 있습니다.
 - 여기 페이지는 이 사이트의 모양을 씁니다. 자르는 로직 `scrollfold/split.js`는 그 저장소의 `web/split.js`를 그대로 복사한 것이니, 그쪽에서 고친 뒤 여기로 복사하세요.
 
+### 사진 그리기 (Photo Painter) — [`/tools/photo-painter/`](https://hobby-programmer-5000.github.io/tools/photo-painter/)
+
+사진을 넣으면 붓 자국을 하나씩 놓아 그림으로 그리고, PNG로 저장합니다.
+
+- 126 px에서 3 px까지 붓 여덟 개를 네 단계(밑칠, 형태와 색, 다듬기, 세부 묘사)로 씁니다.
+- 붓 자국마다 흐리게 한 사진에서 색을 가져와, 그림이 사진과 아직 가장 많이 다른 곳에 놓습니다
+  (Hertzmann의 painterly rendering, SIGGRAPH 98). 같은 브라우저에서는 같은 사진이 항상 같은 그림이 됩니다.
+- 일시정지, 다시 그리기, 1배·3배 속도, 끝까지 바로 가기. PNG 저장(Ctrl+S)은 그 순간의 그림을 긴 변 840 px로 저장합니다.
+- 사진은 브라우저 안에서 처리되고 업로드되지 않습니다. 페이지에 들어 있는 사진도 없습니다.
+
 ## 왜 만들었나
 
 X에 한국어와 영어를 섞어 쓰면 글이 보기보다 훨씬 빨리 찹니다. 한글은 한 글자가 2자로 세어지기 때문입니다.

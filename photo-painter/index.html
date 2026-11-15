@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photo Painter · hp5000 tools</title>
+  <meta name="description" content="Paints any photo you give it, stroke by stroke, from a 126 px brush down to 3 px. Runs in your browser; the photo is never uploaded.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Photo Painter">
+  <meta property="og:description" content="Paints any photo you give it, stroke by stroke. The photo stays in your browser.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/350819703?v=4&s=460">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/350819703?v=4&s=64">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script src="../assets/i18n.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <span hidden data-i18n-title="pp.title"></span>
+  <a class="skip" href="#drop" data-i18n="site.skip">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="mark" href="https://hobby-programmer-5000.github.io/" data-i18n-label="site.home" aria-label="Home">hp<span>5000</span></a>
+      <a class="crumb" href="../">/tools</a>
+      <div class="controls">
+        <button class="icon-btn" id="lang" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-languages"/></svg><span id="lang-label">KO</span></button>
+        <button class="icon-btn" id="theme" type="button"><svg class="ic" aria-hidden="true"><use id="theme-icon" href="../assets/icons.svg#i-monitor"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <p class="kicker">./photo-painter</p>
+      <h1 data-i18n="pp.title">Photo Painter</h1>
+      <p data-i18n="pp.lead">Give it a photo and watch it get painted, stroke by stroke, from a 126 px brush down to 3 px.</p>
+    </div>
+
+    <section class="card-box" aria-labelledby="drop-label">
+      <label class="drop" id="drop" tabindex="0">
+        <svg class="drop-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span id="drop-label" class="drop-title" data-i18n="pp.drop">Drop a photo here or paste it (Ctrl+V)</span>
+        <span id="file-name" class="file-name"></span>
+        <input type="file" id="file" accept="image/*" hidden>
+      </label>
+      <div class="drop-foot">
+        <button class="btn quiet" id="browse" type="button" title="Ctrl+O" data-i18n="pp.choose">Choose file…</button>
+        <p class="small muted" data-i18n="pp.accepts">PNG, JPEG, WebP, AVIF, GIF, BMP · painted at 840 px on the long side</p>
+      </div>
+    </section>
+    <p id="status" class="pp-status" role="status" aria-live="polite"></p>
+    <p class="private small muted"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield"/></svg><span data-i18n="pp.private">Everything runs in your browser. Your photo is never uploaded.</span></p>
+
+    <section class="studio" id="studio" aria-labelledby="studio-h">
+      <h2 id="studio-h" data-i18n="pp.canvasTitle">Painting</h2>
+
+      <div class="brushrow" role="group" data-i18n-label="pp.brush" aria-label="Brush">
+        <span class="k" data-i18n="pp.size">Size</span>
+        <ol class="sizes" id="sizes" data-i18n-label="pp.sizesLabel" aria-label="Brush sizes in pixels"></ol>
+        <span class="k" data-i18n="pp.color">Color</span>
+        <span class="color"><span class="swatch" id="swatch"></span><span class="hex" id="hex">#f4f1ec</span></span>
+      </div>
+
+      <div class="bench">
+        <div class="stage">
+          <div class="easel" id="easel">
+            <canvas id="paint" role="img" data-i18n-label="pp.canvasLabel" aria-label="The painting in progress"></canvas>
+            <canvas id="wet" aria-hidden="true"></canvas>
+            <div class="cursor" id="cursor" hidden></div>
+            <p class="empty small" data-i18n="pp.emptyPane">Open a photo and it starts painting here.</p>
+          </div>
+          <p class="dims small muted" id="dims">840 × 840 px</p>
+        </div>
+
+        <div class="side">
+          <div class="refbox">
+            <h3 data-i18n="pp.reference">Photo</h3>
+            <div class="refframe"><canvas id="ref" role="img" data-i18n-label="pp.reference" aria-label="Photo"></canvas><p class="empty muted small" data-i18n="pp.refEmpty">Your photo shows here.</p></div>
+          </div>
+          <div>
+            <h3 data-i18n="pp.passTitle">Painting pass</h3>
+            <ol class="passes" id="passes">
+              <li data-i18n="pp.p1">Block-in</li>
+              <li data-i18n="pp.p2">Form and color</li>
+              <li data-i18n="pp.p3">Refinement</li>
+              <li data-i18n="pp.p4">Fine details</li>
+            </ol>
+          </div>
+          <div>
+            <p class="count" id="count"></p>
+            <div class="bar" id="bar" role="progressbar" data-i18n-label="pp.progress" aria-label="Painting progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div>
+          </div>
+          <div class="runrow">
+            <button class="btn quiet" id="pause" type="button" title="Space" disabled>Pause</button>
+            <button class="btn quiet" id="restart" type="button" disabled data-i18n="pp.restart">Restart</button>
+          </div>
+          <div class="speed" role="group" data-i18n-label="pp.speed" aria-label="Speed">
+            <button type="button" id="s1" aria-pressed="true" disabled>1×</button>
+            <button type="button" id="s3" aria-pressed="false" disabled>3×</button>
+            <button type="button" id="end" disabled data-i18n="pp.end">End</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="btn primary" id="save" type="button" disabled title="Ctrl+S"><span data-i18n="pp.save">Save PNG</span></button>
+      <span class="hint muted small"><kbd>Ctrl</kbd>+<kbd>S</kbd></span>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <section class="rules need" aria-labelledby="need-h">
+      <h2 id="need-h" data-i18n="pp.needTitle">What you need</h2>
+      <ul>
+        <li data-i18n="pp.need1"></li>
+        <li data-i18n="pp.need2"></li>
+        <li data-i18n="pp.need3"></li>
+        <li data-i18n="pp.need4"></li>
+      </ul>
+      <p class="small muted" data-i18n="pp.needRisk"></p>
+    </section>
+
+    <section class="rules" aria-labelledby="rules-h">
+      <h2 id="rules-h" data-i18n="pp.rulesTitle">How it paints</h2>
+      <ol>
+        <li data-i18n="pp.rule1"></li>
+        <li data-i18n="pp.rule2"></li>
+        <li data-i18n="pp.rule3"></li>
+        <li data-i18n="pp.rule4"></li>
+      </ol>
+      <p class="small muted"><span data-i18n="pp.sources">Sources:</span>
+        <a href="https://mrl.cs.nyu.edu/publications/painterly98/" data-i18n="pp.srcPaper">Hertzmann, “Painterly Rendering with Curved Brush Strokes of Multiple Sizes” (SIGGRAPH 98)</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/REFERENCES.md" data-i18n="pp.srcMore">other references</a></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="small">
+        <a href="../" data-i18n="site.tools">Tools</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/CREDITS.md" data-i18n="site.credits">Credits</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/tree/main/photo-painter" data-i18n="site.source">Source</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

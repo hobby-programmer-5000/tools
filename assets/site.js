@@ -14,7 +14,8 @@
 
   function t(key, vars) {
     let s = (S[lang] && S[lang][key]) ?? S.en[key] ?? key;
-    if (vars) for (const [k, v] of Object.entries(vars)) s = s.replace(`{${k}}`, v);
+    // One pass with a function: a value such as a file name may itself contain "$&" or "{w}".
+    if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
     return s;
   }
 
