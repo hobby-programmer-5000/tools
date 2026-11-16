@@ -21,7 +21,7 @@ function files(dir, ext) {
 // User text (a file name, a folder name) must never be drawn in the web fonts: they are split by
 // Unicode range, so new characters would fetch new font files, which hints at the text.
 test("status lines that show file names use system fonts, and toasts carry no file name", () => {
-  const rules = [["scrollfold/style.css", ".sf-status {"], ["scrollfold/style.css", ".file-name {"], ["photo-painter/style.css", ".file-name, .pp-status {"]];
+  const rules = [["scrollfold/style.css", ".sf-status {"], ["scrollfold/style.css", ".file-name {"], ["photo-painter/style.css", ".file-name, .pp-status {"], ["meme/style.css", ".mm-user {"]];
   for (const [file, selector] of rules) {
     const css = readFileSync(join(root, file), "utf8");
     const at = css.indexOf(selector);
@@ -47,7 +47,7 @@ test("status lines that show file names use system fonts, and toasts carry no fi
 
 // Dropping a file outside a drop zone makes the browser open it and lose the page.
 test("pages that take a dropped file catch drops anywhere on the page", () => {
-  for (const name of ["scrollfold/app.js", "photo-painter/app.js"]) {
+  for (const name of ["scrollfold/app.js", "photo-painter/app.js", "meme/app.js"]) {
     const src = readFileSync(join(root, name), "utf8");
     assert.ok(/window\.addEventListener\("dragover"/.test(src) && /window\.addEventListener\("drop"/.test(src), `${name} does not handle drops on the window`);
   }

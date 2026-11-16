@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Meme Maker · hp5000 tools</title>
+  <meta name="description" content="Make a meme without ads, watermarks or sign-up. Cover the old text, write your own, put your photo or handwriting in. Runs in your browser; nothing is uploaded.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Meme Maker">
+  <meta property="og:description" content="Make a meme with your own words, handwriting and photos. Nothing is uploaded.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/350819703?v=4&s=460">
+  <link rel="icon" href="https://avatars.githubusercontent.com/u/350819703?v=4&s=64">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="style.css">
+  <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+  <script src="../assets/i18n.js" defer></script>
+  <script src="../assets/site.js" defer></script>
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <span hidden data-i18n-title="mm.title"></span>
+  <a class="skip" href="#drop" data-i18n="site.skip">Skip to content</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="mark" href="https://hobby-programmer-5000.github.io/" data-i18n-label="site.home" aria-label="Home">hp<span>5000</span></a>
+      <a class="crumb" href="../">/tools</a>
+      <div class="controls">
+        <button class="icon-btn" id="lang" type="button"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-languages"/></svg><span id="lang-label">KO</span></button>
+        <button class="icon-btn" id="theme" type="button"><svg class="ic" aria-hidden="true"><use id="theme-icon" href="../assets/icons.svg#i-monitor"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap mm-wrap">
+    <div class="page-head">
+      <p class="kicker">./meme</p>
+      <h1 data-i18n="mm.title">Meme Maker</h1>
+      <p data-i18n="mm.lead">Paste a meme, cover its old text, then add your own words, handwriting or photo. No ads, no watermark, no sign-up.</p>
+    </div>
+
+    <section class="card-box" id="start" aria-labelledby="drop-label">
+      <label class="drop" id="drop" tabindex="0">
+        <svg class="drop-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-5 5m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+        <span id="drop-label" class="drop-title" data-i18n="mm.drop">Drop a picture here or paste it (Ctrl+V)</span>
+        <span class="small muted" data-i18n="mm.dropSub">It becomes the background of your meme.</span>
+        <input type="file" id="file" accept="image/*" hidden>
+      </label>
+      <div class="drop-foot">
+        <button class="btn quiet" id="browse" type="button" title="Ctrl+O" data-i18n="mm.choose">Choose file…</button>
+        <span class="or small muted" data-i18n="mm.or">or</span>
+        <div class="blank" role="group" data-i18n-label="mm.blankGroup" aria-label="Blank canvas">
+          <select id="blank-size" data-i18n-label="mm.blankSize" aria-label="Canvas size">
+            <option value="1080x1080">1080 × 1080</option>
+            <option value="1200x675">1200 × 675</option>
+            <option value="1080x1350">1080 × 1350</option>
+            <option value="1080x1920">1080 × 1920</option>
+          </select>
+          <input type="color" id="blank-color" value="#ffffff" data-i18n-label="mm.blankColor" aria-label="Canvas color">
+          <button class="btn quiet" id="blank" type="button" data-i18n="mm.blank">Blank canvas</button>
+        </div>
+      </div>
+    </section>
+    <p id="status" class="mm-status mm-user" role="status" aria-live="polite"></p>
+    <p class="private small muted"><svg class="ic" aria-hidden="true"><use href="../assets/icons.svg#i-shield"/></svg><span data-i18n="mm.private">Everything runs in your browser. Your pictures and words are never uploaded.</span></p>
+
+    <section class="tpl" id="tpl" aria-labelledby="tpl-h">
+      <h2 id="tpl-h" data-i18n="mm.tplTitle">My templates</h2>
+      <p class="small muted" id="tpl-empty" data-i18n="mm.tplEmpty">Templates you save are kept in this browser only. Save one from the editor below.</p>
+      <ul class="tpl-grid" id="tpl-grid"></ul>
+    </section>
+
+    <section class="studio" id="studio" aria-labelledby="studio-h" hidden>
+      <h2 id="studio-h" data-i18n="mm.editor">Editor</h2>
+
+      <div class="mm-tools" role="toolbar" data-i18n-label="mm.tools" aria-label="Tools">
+        <div class="seg" role="group" data-i18n-label="mm.modes" aria-label="Mode">
+          <button type="button" id="t-select" data-tool="select" aria-pressed="true" data-i18n="mm.tSelect">Move</button>
+          <button type="button" id="t-pen" data-tool="pen" aria-pressed="false" data-i18n="mm.tPen">Pen</button>
+          <button type="button" id="t-cover" data-tool="cover" aria-pressed="false" data-i18n="mm.tCover">Cover</button>
+          <button type="button" id="t-hole" data-tool="hole" aria-pressed="false" data-i18n="mm.tHole">Hole</button>
+          <button type="button" id="t-cut" data-tool="cut" aria-pressed="false" data-i18n="mm.tCut">Cut out</button>
+        </div>
+        <div class="adds" role="group" data-i18n-label="mm.add" aria-label="Add">
+          <button class="btn quiet" type="button" id="add-text" data-i18n="mm.addText">+ Text</button>
+          <button class="btn quiet" type="button" id="add-photo" data-i18n="mm.addPhoto">+ Photo</button>
+          <button class="btn quiet" type="button" id="add-ink" data-i18n="mm.addInk">+ Handwriting photo</button>
+          <button class="btn quiet" type="button" id="add-below" data-i18n="mm.addBelow">+ Picture below</button>
+        </div>
+        <input type="file" id="photo-file" accept="image/*" hidden>
+        <input type="file" id="ink-file" accept="image/*" hidden>
+        <input type="file" id="below-file" accept="image/*" hidden>
+      </div>
+
+      <div class="opts" id="opts">
+        <p class="hint-line small" id="tool-hint"></p>
+        <div class="opt-row" id="o-pen" hidden>
+          <label><span data-i18n="mm.color">Color</span> <input type="color" id="pen-color" value="#111111"></label>
+          <label><span data-i18n="mm.width">Width</span> <input type="range" id="pen-size" min="1" max="40" value="6"></label>
+        </div>
+        <div class="opt-row" id="o-shape" hidden>
+          <div class="seg small-seg" role="group" data-i18n-label="mm.shape" aria-label="Shape">
+            <button type="button" data-shape="ellipse" aria-pressed="true" data-i18n="mm.sEllipse">Ellipse</button>
+            <button type="button" data-shape="rect" aria-pressed="false" data-i18n="mm.sRect">Rectangle</button>
+            <button type="button" data-shape="lasso" aria-pressed="false" data-i18n="mm.sLasso">Lasso</button>
+            <button type="button" data-shape="brush" id="s-brush" aria-pressed="false" data-i18n="mm.sBrush">Eraser</button>
+          </div>
+          <label id="o-brush"><span data-i18n="mm.width">Width</span> <input type="range" id="brush-size" min="4" max="120" value="40"></label>
+          <label><span data-i18n="mm.feather">Soft edge</span> <input type="range" id="feather" min="0" max="60" value="8"></label>
+        </div>
+      </div>
+
+      <div class="bench mm-bench">
+        <div class="stage-col">
+          <div class="mm-stage" id="stage">
+            <canvas id="cv" role="img" data-i18n-label="mm.canvasLabel" aria-label="Your meme"></canvas>
+            <canvas id="ov" aria-hidden="true"></canvas>
+          </div>
+          <p class="dims small muted" id="dims"></p>
+          <div class="actions mm-actions">
+            <button class="btn quiet" id="undo" type="button" title="Ctrl+Z" data-i18n="mm.undo" disabled>Undo</button>
+            <button class="btn quiet" id="redo" type="button" title="Ctrl+Y" data-i18n="mm.redo" disabled>Redo</button>
+            <button class="btn primary" id="save" type="button" title="Ctrl+S" data-i18n="mm.save">Save PNG</button>
+            <button class="btn quiet" id="copy" type="button" data-i18n="mm.copy">Copy image</button>
+            <button class="btn quiet" id="save-tpl" type="button" data-i18n="mm.saveTpl">Save as template</button>
+          </div>
+        </div>
+
+        <div class="side mm-side">
+          <div class="panel">
+            <h3 data-i18n="mm.canvas">Canvas</h3>
+            <label class="check"><input type="checkbox" id="cap-top"> <span data-i18n="mm.capTop">Caption band on top</span></label>
+            <label class="check"><input type="checkbox" id="cap-bottom"> <span data-i18n="mm.capBottom">Caption band at the bottom</span></label>
+            <label class="row"><span data-i18n="mm.bg">Band color</span> <input type="color" id="bg" value="#ffffff"></label>
+          </div>
+
+          <div class="panel" id="props" hidden>
+            <h3 id="props-h" data-i18n="mm.selected">Selected</h3>
+            <div id="p-text" hidden>
+              <label class="stack"><span data-i18n="mm.text">Text</span>
+                <textarea id="text-input" class="mm-user" rows="3"></textarea></label>
+              <label class="row"><span data-i18n="mm.font">Font</span>
+                <select id="font">
+                  <option value="gothic" data-i18n="mm.fGothic">Bold gothic</option>
+                  <option value="impact">Impact</option>
+                  <option value="serif" data-i18n="mm.fSerif">Serif</option>
+                  <option value="comic">Comic</option>
+                </select></label>
+              <label class="row"><span data-i18n="mm.maxSize">Max size</span> <input type="range" id="size" min="8" max="400" value="80"></label>
+              <div class="row">
+                <label><span data-i18n="mm.fill">Fill</span> <input type="color" id="fill" value="#ffffff"></label>
+                <label><span data-i18n="mm.outline">Outline</span> <input type="color" id="stroke" value="#000000"></label>
+              </div>
+              <label class="row"><span data-i18n="mm.outlineW">Outline width</span> <input type="range" id="stroke-w" min="0" max="20" value="6"></label>
+              <label class="row"><span data-i18n="mm.align">Align</span>
+                <select id="align">
+                  <option value="center" data-i18n="mm.aCenter">Center</option>
+                  <option value="left" data-i18n="mm.aLeft">Left</option>
+                  <option value="right" data-i18n="mm.aRight">Right</option>
+                </select></label>
+              <label class="check"><input type="checkbox" id="caps"> <span data-i18n="mm.caps">ALL CAPS (Latin letters)</span></label>
+            </div>
+            <div id="p-image" hidden>
+              <label class="row"><span data-i18n="mm.opacity">Opacity</span> <input type="range" id="opacity" min="5" max="100" value="100"></label>
+              <div class="row">
+                <button class="btn quiet sm" type="button" id="flip" data-i18n="mm.flip">Flip</button>
+                <button class="btn quiet sm" type="button" id="uncut" data-i18n="mm.uncut">Undo cut-out and holes</button>
+              </div>
+            </div>
+            <div id="p-ink" hidden>
+              <label class="row"><span data-i18n="mm.color">Color</span> <input type="color" id="ink-color" value="#111111"></label>
+            </div>
+            <div id="p-patch" hidden>
+              <label class="row"><span data-i18n="mm.color">Color</span> <input type="color" id="patch-color" value="#ffffff"></label>
+              <button class="btn quiet sm" type="button" id="patch-auto" data-i18n="mm.patchAuto">Pick color from around it</button>
+            </div>
+            <div class="order" role="group" data-i18n-label="mm.order" aria-label="Order">
+              <button class="btn quiet sm" type="button" id="to-back" data-i18n="mm.toBack">To back</button>
+              <button class="btn quiet sm" type="button" id="down" data-i18n="mm.down">Down</button>
+              <button class="btn quiet sm" type="button" id="up" data-i18n="mm.up">Up</button>
+              <button class="btn quiet sm" type="button" id="to-front" data-i18n="mm.toFront">To front</button>
+              <button class="btn quiet sm" type="button" id="dup" title="Ctrl+D" data-i18n="mm.dup">Duplicate</button>
+              <button class="btn quiet sm danger" type="button" id="del" title="Delete" data-i18n="mm.del">Delete</button>
+            </div>
+            <label class="check"><input type="checkbox" id="lock"> <span data-i18n="mm.lock">Lock (can't be moved by clicking)</span></label>
+          </div>
+
+          <div class="panel">
+            <h3 data-i18n="mm.layers">Layers (top first)</h3>
+            <ol class="layers mm-user" id="layers"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <dialog id="ink-dlg" aria-labelledby="ink-h">
+      <h2 id="ink-h" data-i18n="mm.inkTitle">Handwriting from a photo</h2>
+      <p class="small muted" data-i18n="mm.inkLead">Paper turns transparent and only the ink stays. Move the slider until the paper is gone and the strokes are whole.</p>
+      <div class="ink-preview"><canvas id="ink-cv" role="img" data-i18n-label="mm.inkPreview" aria-label="Preview"></canvas></div>
+      <label class="row"><span data-i18n="mm.inkThreshold">Paper cutoff</span> <input type="range" id="ink-t" min="1" max="254" value="140"></label>
+      <label class="row"><span data-i18n="mm.color">Color</span> <input type="color" id="ink-c" value="#111111"></label>
+      <div class="row end">
+        <button class="btn quiet" type="button" id="ink-cancel" data-i18n="mm.cancel">Cancel</button>
+        <button class="btn primary" type="button" id="ink-ok" data-i18n="mm.inkAdd">Add</button>
+      </div>
+    </dialog>
+
+    <section class="rules need" aria-labelledby="need-h">
+      <h2 id="need-h" data-i18n="mm.needTitle">What you need</h2>
+      <ul>
+        <li data-i18n="mm.need1"></li>
+        <li data-i18n="mm.need2"></li>
+        <li data-i18n="mm.need3"></li>
+      </ul>
+      <p class="small muted" data-i18n="mm.needRisk"></p>
+    </section>
+
+    <section class="rules" aria-labelledby="rules-h">
+      <h2 id="rules-h" data-i18n="mm.howTitle">How to</h2>
+      <ol>
+        <li data-i18n="mm.how1"></li>
+        <li data-i18n="mm.how2"></li>
+        <li data-i18n="mm.how3"></li>
+        <li data-i18n="mm.how4"></li>
+        <li data-i18n="mm.how5"></li>
+      </ol>
+      <p class="small muted" data-i18n="mm.keys"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <p class="small">
+        <a href="../" data-i18n="site.tools">Tools</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/blob/main/CREDITS.md" data-i18n="site.credits">Credits</a>
+        ·
+        <a href="https://github.com/hobby-programmer-5000/tools/tree/main/meme" data-i18n="site.source">Source</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

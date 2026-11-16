@@ -27,6 +27,18 @@ Differences from Hertzmann's paper: strokes are round-capped polylines of 2 to 8
 roughly top to bottom instead of in random order; each brush size has a stroke budget; three box blurs stand in for a Gaussian.
 The drop zone, file-name display, status line and buttons follow Scrollfold's page on this site.
 
+## Meme Maker
+
+| Source | What it settles |
+|---|---|
+| [Imgflip Meme Generator](https://imgflip.com/memegenerator), looked at 2026-11-16 | The common flow (pick a picture, add text boxes, save), per-box text settings (font, caps, outline, max size, alignment, opacity), adding a picture on top or below. Also what to leave out: its watermark is on by default and ads load as soon as you edit. |
+| [iLoveIMG Meme generator](https://www.iloveimg.com/meme-generator), looked at 2026-11-16 | Text inside the picture or in a caption band outside it. |
+| [georapbox/meme-generator](https://github.com/georapbox/meme-generator) (MIT) | A meme page that processes pictures in the browser only. No code is copied. |
+| Place My Face (iOS) and YouCam “Face in Hole” | Putting your own face behind a hole in a template, which became the Hole tool. |
+| Nobuyuki Otsu, “A Threshold Selection Method from Gray-Level Histograms”, IEEE Trans. SMC 9(1), 1979 | The starting cutoff between paper and ink for handwriting photos. |
+
+All code was written for this site. No meme images, fonts or icons from these sources are used.
+
 ## Design
 
 The look follows the landing page, whose design sources are listed in its

@@ -71,6 +71,30 @@
         ]
       },
       "added": "2026-11-15"
+    },
+    {
+      "slug": "meme",
+      "name": {
+        "en": "Meme Maker",
+        "ko": "밈 만들기"
+      },
+      "summary": {
+        "en": "Cover a meme's old text, then add your own words, handwriting or photo, even through a hole cut in the picture. No ads or watermark; nothing is uploaded.",
+        "ko": "밈의 원래 글자를 덮고 내 문구·손글씨·사진을 넣습니다. 그림에 구멍을 내고 그 뒤에 내 얼굴을 넣을 수도 있습니다. 광고·워터마크 없음, 아무것도 올라가지 않습니다."
+      },
+      "tags": {
+        "en": [
+          "image",
+          "meme",
+          "KR/EN"
+        ],
+        "ko": [
+          "이미지",
+          "밈",
+          "한/영"
+        ]
+      },
+      "added": "2026-11-16"
     }
   ]
 }

@@ -27,6 +27,7 @@ assets/icons.svg                 아이콘 스프라이트
 tools.json                       도구 목록. 랜딩 페이지 Playground 칸도 이 파일을 읽는다
 <slug>/index.html, app.js        도구 화면 (DOM)
 scrollfold/                      Scrollfold 페이지(사이트 공용 틀, 문자열은 sf.*). split.js만 hobby-programmer-5000/scrollfold의 web/split.js 그대로 복사본이다. split.js는 여기서 고치지 말고 원본에서 고친 뒤 복사한다
+meme/                            밈 만들기. meme.js가 글자 맞춤·좌표·레이어·픽셀 계산(로직), app.js가 캔버스와 조작. 템플릿 이미지를 저장소에 넣지 않는다(사용자가 올린 것만 IndexedDB에)
 photo-painter/                   사진 그리기. painter.js가 붓 자국을 계획하고(로직), app.js가 그린다. 사진을 페이지에 넣지 않는다 (테스트 pp7)
 <slug>/<logic>.js                도구 로직 (DOM 없음, Node에서 테스트)
 vendor/                          외부 라이브러리 번들과 라이선스, 만든 방법
@@ -42,7 +43,7 @@ test/                            node:test
 
 ## 이 프로젝트의 불변 조건
 
-- 사용자가 입력한 내용은 네트워크로 보내지 않는다. 저장은 그 브라우저의 localStorage에만, try/catch로 감싼다.
+- 사용자가 입력한 내용은 네트워크로 보내지 않는다. 저장은 그 브라우저 안(설정은 localStorage, 이미지는 IndexedDB)에만, 실패해도 페이지가 돌아가게 try/catch로 감싼다.
 - 빌드 단계 없음. 외부 라이브러리는 한 번 번들해서 `vendor/`에 커밋하고 만든 방법을 `vendor/README.md`에 남긴다.
 - X 글자 수는 twitter-text의 `parseTweet`이 정한다. 내역(breakdown)은 그 합이 공식 값과 같아야 한다 (테스트).
 - 텍스트 대비는 밝게/어둡게 모두 WCAG AA(4.5:1) 이상.

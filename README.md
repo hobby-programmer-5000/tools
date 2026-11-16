@@ -41,6 +41,20 @@ Paints any photo you give it, stroke by stroke, and saves the painting as a PNG.
 - Pause, restart, 1× or 3× speed, or jump to the end. Save PNG (Ctrl+S) saves the painting as it is at that moment, 840 px on the long side.
 - The photo is processed in your browser and never uploaded. No photo is bundled with the page.
 
+### Meme Maker — [`/tools/meme/`](https://hobby-programmer-5000.github.io/tools/meme/)
+
+Makes a meme without ads, watermarks or sign-up, and lets you swap parts of it for your own words, handwriting or photo.
+
+- Paste (Ctrl+V) or drop a meme, or start from a blank canvas. Add a white caption band on top or at the bottom, or stack another picture below.
+- **Cover** old text with a box filled from the colors around it, then add text boxes that size their text to fit
+  (four system fonts, fill, outline, alignment). Move, resize and rotate anything.
+- **Hole** makes part of a picture see-through (ellipse, rectangle, lasso or eraser, soft edge), so your photo can sit behind it, face-in-hole style.
+  **Cut out** keeps just the part of your photo you mark.
+- Handwriting: write with the **Pen**, or photograph handwriting on paper and **+ Handwriting photo** keeps only the ink, in any color.
+- Layers, undo and redo, Save PNG at full size (Ctrl+S; backgrounds over 4096 px or 12 megapixels are scaled down first), copy the image, and **My templates** saved in this browser (IndexedDB) only.
+- Pictures and text never leave the browser, and typed text is drawn only in system fonts, so no font file is fetched for it.
+  No meme images are bundled: templates are only the ones you save.
+
 ## Why I made this
 
 Writing on X in Korean and English, a post fills up much faster than it looks: every Hangul syllable counts as 2.
@@ -61,7 +75,9 @@ Then open http://127.0.0.1:8766/. There is no build step.
 140/141 Hangul, links at 23, joined emoji at 2, the cut point, the 25,000 Premium limit, and that the breakdown
 adds up to the official count on 512 strings, 500 of them random. `test/painter.test.mjs` checks that Photo Painter gives the same strokes
 for the same photo and seed, that every stroke's color is the blurred photo's color where the stroke starts, and that its scripts
-contain no fetch, XHR, WebSocket or beacon calls and no URLs. GitHub Actions runs the tests and deploys only if they pass.
+contain no fetch, XHR, WebSocket or beacon calls and no URLs. `test/meme.test.mjs` checks Meme Maker's text fitting (the chosen size fits and
+one size larger does not), rotated hit tests and resizing, lasso tests, cut-outs that move no pixel, ink extraction, cover colors, undo/redo,
+layer order and canvas layout. GitHub Actions runs the tests and deploys only if they pass.
 
 ## Project layout
 
@@ -72,6 +88,7 @@ tools.json               the list of tools (the landing page reads it too)
 x-counter/               the X post length counter (counter.js is the logic, app.js the page)
 scrollfold/              Scrollfold page (split.js is copied from hobby-programmer-5000/scrollfold; edit it there)
 photo-painter/           Photo Painter (painter.js plans the strokes, app.js draws them)
+meme/                    Meme Maker (meme.js is the logic, app.js the canvas and input)
 vendor/                  twitter-text bundle, its licenses, and how it was built
 test/                    node:test
 ```
